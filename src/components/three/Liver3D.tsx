@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { fill, type Dict } from "@/i18n/dictionaries";
 import { LiverIllustration } from "../LiverIllustration";
 import { SceneErrorBoundary, use3DCapability } from "./capability";
 import type { InteractionState } from "./LiverScene";
@@ -10,24 +11,15 @@ import type { InteractionState } from "./LiverScene";
 /** The 3D scene (three.js + R3F) is code-split and only fetched when it will be used. */
 const LiverScene = dynamic(() => import("./LiverScene"), { ssr: false });
 
-/** Labels for the anatomical hotspots; 3D anchor points live in the scene chunk (same order). */
-const HOTSPOTS = [
-  { id: "right-lobe", label: "Right Lobe", description: "The larger of the liver's two main anatomical lobes." },
-  {
-    id: "left-lobe",
-    label: "Left Lobe",
-    description: "The smaller lobe, extending toward the left side of the upper abdomen.",
-  },
-  { id: "gallbladder", label: "Gallbladder", description: "A small pouch beneath the liver that stores bile." },
-] as const;
-
 /**
  * Hero organ visual. Renders the lightweight SVG illustration immediately,
  * then — on capable devices, once the browser is idle — swaps in an
  * interactive 3D liver. Falls back to the SVG for reduced-motion users,
  * low-end devices, Save-Data, or when WebGL is unavailable.
  */
-export function Liver3D({ onHotspotChange }: { onHotspotChange?: (open: boolean) => void }) {
+export function Liver3D({ t, onHotspotChange }: { t: Dict["liver3d"]; onHotspotChange?: (open: boolean) => void }) {
+  // Hotspot order must match createHotspots() in LiverScene.
+  const HOTSPOTS = t.hotspots;
   const [capability, setCapability] = use3DCapability();
   const [load, setLoad] = useState(false);
   const [ready, setReady] = useState(false);
@@ -150,7 +142,7 @@ export function Liver3D({ onHotspotChange }: { onHotspotChange?: (open: boolean)
           tabIndex={ready ? 0 : -1}
           role="group"
           aria-roledescription="3D model"
-          aria-label="Interactive 3D model of the human liver. Use the arrow keys to rotate it."
+          aria-label={t.modelLabel}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={endPointer}
@@ -183,7 +175,7 @@ export function Liver3D({ onHotspotChange }: { onHotspotChange?: (open: boolean)
                   <button
                     type="button"
                     aria-expanded={open}
-                    aria-label={`${h.label}: show description`}
+                    aria-label={fill(t.showDescription, { label: h.label })}
                     onClick={() => setOpenHotspot(open ? null : h.id)}
                     onBlur={() => setOpenHotspot((cur) => (cur === h.id ? null : cur))}
                     className="relative -mt-3.5 -ml-3.5 flex h-7 w-7 items-center justify-center rounded-full"
@@ -217,7 +209,7 @@ export function Liver3D({ onHotspotChange }: { onHotspotChange?: (open: boolean)
             transition={{ delay: 1.2 }}
             className="pointer-events-none absolute -bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-navy-900/80 px-3.5 py-1.5 text-[0.7rem] font-medium whitespace-nowrap text-white backdrop-blur"
           >
-            Drag to rotate · Tap the dots to explore
+            {t.hint}
           </motion.p>
         )}
       </AnimatePresence>

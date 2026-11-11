@@ -1,14 +1,32 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { CalendarCheck, Menu, X } from "lucide-react";
+import { CalendarCheck, Languages, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { navLinks } from "@/lib/site";
+import { localeHome, type Dict, type Locale } from "@/i18n/dictionaries";
 import { Logo } from "./Logo";
 import { buttonClasses } from "./ui/Button";
 
-export function Navbar() {
+/** Link to the same page in the other language. */
+function LanguageSwitch({ t, className = "" }: { t: Dict; className?: string }) {
+  const other: Locale = t.locale === "en" ? "bn" : "en";
+  return (
+    <a
+      href={localeHome[other]}
+      hrefLang={other}
+      lang={other}
+      aria-label={t.common.switchLanguageLabel}
+      className={`inline-flex items-center gap-1.5 rounded-full border border-navy-100 bg-white px-3.5 py-2 text-sm font-semibold text-navy-800 shadow-soft transition hover:border-teal-300 hover:text-teal-700 ${className}`}
+    >
+      <Languages className="h-4 w-4 text-teal-600" aria-hidden />
+      {t.common.switchLanguage}
+    </a>
+  );
+}
+
+export function Navbar({ t }: { t: Dict }) {
+  const navLinks = t.nav.links;
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string>("#home");
@@ -65,20 +83,21 @@ export function Navbar() {
           : "border-b border-transparent bg-transparent"
       }`}
     >
-      <nav aria-label="Primary" className="container-page flex h-[4.5rem] items-center justify-between gap-6">
-        <Link href="#home" aria-label="HepatoCare – back to top" className="rounded-lg">
+      <nav aria-label={t.nav.primary} className="container-page flex h-[4.5rem] items-center justify-between gap-3 xl:gap-6">
+        <Link href="#home" aria-label={t.nav.backToTop} className="rounded-lg">
           <Logo />
         </Link>
 
-        <ul className="hidden items-center gap-1 lg:flex">
-          {navLinks.map((link) => {
+        <ul className="hidden items-center gap-0.5 lg:flex xl:gap-1">
+          {navLinks.map((link, i) => {
             const isActive = active === link.href;
             return (
-              <li key={link.href}>
+              // "Home" is redundant with the logo; hide it where space is tight.
+              <li key={link.href} className={i === 0 ? "hidden xl:block" : undefined}>
                 <Link
                   href={link.href}
                   aria-current={isActive ? "true" : undefined}
-                  className={`relative rounded-full px-3.5 py-2 text-sm font-medium transition-colors ${
+                  className={`relative rounded-full px-2.5 py-2 text-sm font-medium whitespace-nowrap xl:px-3.5 transition-colors ${
                     isActive ? "text-teal-700" : "text-navy-700 hover:text-teal-600"
                   }`}
                 >
@@ -97,10 +116,11 @@ export function Navbar() {
         </ul>
 
         <div className="flex items-center gap-2">
+          <LanguageSwitch t={t} />
           <span className="hidden sm:block">
             <Link href="#appointment" className={buttonClasses("primary", "!px-5 !py-2.5")}>
               <CalendarCheck className="h-4 w-4" aria-hidden />
-              Appointment
+              {t.nav.appointment}
             </Link>
           </span>
           <button
@@ -108,7 +128,7 @@ export function Navbar() {
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-controls="mobile-menu"
-            aria-label={open ? "Close menu" : "Open menu"}
+            aria-label={open ? t.nav.closeMenu : t.nav.openMenu}
             className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-navy-100 bg-white text-navy-800 shadow-soft transition hover:border-teal-300 hover:text-teal-600 lg:hidden"
           >
             {open ? <X className="h-5 w-5" aria-hidden /> : <Menu className="h-5 w-5" aria-hidden />}
@@ -153,7 +173,7 @@ export function Navbar() {
                   className={buttonClasses("primary", "w-full")}
                 >
                   <CalendarCheck className="h-4 w-4" aria-hidden />
-                  Book an Appointment
+                  {t.nav.bookAppointment}
                 </Link>
               </li>
             </ul>

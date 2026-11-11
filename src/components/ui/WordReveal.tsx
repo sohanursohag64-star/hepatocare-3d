@@ -26,7 +26,7 @@ export function WordReveal({
     <span className={className}>
       {words.map((w, i) => (
         <Fragment key={`${w}-${i}`}>
-          <span className="inline-block overflow-hidden pb-[0.12em] align-bottom">
+          <span className="word-mask inline-block overflow-hidden pb-[0.12em] align-bottom">
             <motion.span
               className={`inline-block ${wordClassName}`}
               initial={{ y: "110%", opacity: 0 }}

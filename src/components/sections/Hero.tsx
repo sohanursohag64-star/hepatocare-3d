@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { ArrowRight, CalendarCheck, HeartPulse, ShieldCheck, Stethoscope } from "lucide-react";
-import { doctor } from "@/lib/site";
+import type { Dict } from "@/i18n/dictionaries";
 import { Liver3D } from "../three/Liver3D";
 import { ButtonLink } from "../ui/Button";
 import { Magnetic } from "../ui/Magnetic";
@@ -16,7 +16,8 @@ const fadeUp = {
   show: (i: number) => ({ opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.1 + i * 0.1, ease } }),
 };
 
-export function Hero() {
+export function Hero({ t }: { t: Dict }) {
+  const { hero, doctor } = t;
   // Hide the floating chips while a 3D hotspot description is open, so they never cover it.
   const [hotspotOpen, setHotspotOpen] = useState(false);
   return (
@@ -45,17 +46,17 @@ export function Hero() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal-400 opacity-60" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-teal-500" />
             </span>
-            Specialist Liver Care
+            {hero.badge}
           </motion.p>
 
           <h1
             id="hero-title"
             className="mt-6 font-display text-[2.6rem] leading-[1.05] font-medium tracking-tight text-balance text-navy-900 sm:text-6xl lg:text-[4.25rem]"
           >
-            <WordReveal text="Your Liver Health," delay={0.15} />{" "}
+            <WordReveal text={hero.title1} delay={0.15} />{" "}
             <span className="relative whitespace-nowrap">
               <WordReveal
-                text="Our Priority."
+                text={hero.title2}
                 delay={0.45}
                 wordClassName="bg-gradient-to-r from-teal-500 to-teal-700 bg-clip-text pr-[0.06em] italic text-transparent"
               />
@@ -86,8 +87,7 @@ export function Hero() {
             custom={2}
             className="mx-auto mt-7 max-w-xl text-base leading-relaxed text-navy-600 sm:text-lg lg:mx-0"
           >
-            Expert evaluation and long-term care for liver conditions, delivered through unhurried, one-to-one
-            consultations. Every plan is shaped around your history, your test results and your goals.
+            {hero.intro}
           </motion.p>
 
           <motion.div
@@ -117,12 +117,12 @@ export function Hero() {
             <Magnetic>
               <ButtonLink href="#appointment" variant="primary" className="shine w-full !px-7 !py-4">
                 <CalendarCheck className="h-4 w-4" aria-hidden />
-                Book an Appointment
+                {hero.ctaPrimary}
               </ButtonLink>
             </Magnetic>
             <Magnetic>
               <ButtonLink href="#liver-story" variant="secondary" className="w-full !px-7 !py-4">
-                Explore the Liver Story
+                {hero.ctaSecondary}
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
               </ButtonLink>
             </Magnetic>
@@ -148,7 +148,7 @@ export function Hero() {
           <div className="absolute inset-[18%] rounded-full bg-teal-300/25 blur-2xl" aria-hidden />
 
           {/* Organ: SVG first, upgraded to interactive 3D on capable devices */}
-          <Liver3D onHotspotChange={setHotspotOpen} />
+          <Liver3D t={t.liver3d} onHotspotChange={setHotspotOpen} />
 
           {/* Floating info chips */}
           <motion.div
@@ -160,8 +160,8 @@ export function Hero() {
               <ShieldCheck className="h-5 w-5" aria-hidden />
             </span>
             <span className="text-left leading-tight">
-              <span className="block text-xs font-bold text-navy-900">Evidence-Based</span>
-              <span className="block text-[0.7rem] text-navy-500">Clinical guidance</span>
+              <span className="block text-xs font-bold text-navy-900">{hero.chip1Title}</span>
+              <span className="block text-[0.7rem] text-navy-500">{hero.chip1Text}</span>
             </span>
           </motion.div>
 
@@ -174,8 +174,8 @@ export function Hero() {
               <HeartPulse className="h-5 w-5" aria-hidden />
             </span>
             <span className="text-left leading-tight">
-              <span className="block text-xs font-bold text-navy-900">Personalized Care</span>
-              <span className="block text-[0.7rem] text-navy-500">One-to-one consultation</span>
+              <span className="block text-xs font-bold text-navy-900">{hero.chip2Title}</span>
+              <span className="block text-[0.7rem] text-navy-500">{hero.chip2Text}</span>
             </span>
           </motion.div>
         </motion.div>

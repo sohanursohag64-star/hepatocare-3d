@@ -1,16 +1,14 @@
 import { Award, BadgeCheck, GraduationCap, Quote, UserRound } from "lucide-react";
-import { doctor } from "@/lib/site";
+import Image from "next/image";
+import { fill, type Dict } from "@/i18n/dictionaries";
+import { media } from "@/lib/site";
 import { ReadMore } from "../ui/ReadMore";
 import { Reveal } from "../ui/Reveal";
 import { SectionHeading } from "../ui/SectionHeading";
 
-const highlights = [
-  { value: doctor.experienceYears, label: "Years of clinical experience" },
-  { value: "1:1", label: "Dedicated consultations" },
-  { value: "360°", label: "Review of history & reports" },
-];
-
-export function About() {
+export function About({ t }: { t: Dict }) {
+  const { about, doctor } = t;
+  const highlights = about.highlights.map((h) => ({ ...h, value: fill(h.value, { years: doctor.experienceYears }) }));
   return (
     <section id="about" aria-labelledby="about-title" className="relative overflow-x-clip bg-white py-20 sm:py-28">
       <div className="container-page grid items-center gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
@@ -21,6 +19,18 @@ export function About() {
           <figure className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-navy-800 via-navy-900 to-navy-950 shadow-lift">
             <div className="bg-grid absolute inset-0 opacity-40 invert" aria-hidden />
             <div className="absolute top-1/4 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-teal-400/25 blur-3xl" aria-hidden />
+            {media.doctorPhoto ? (
+              <div className="relative aspect-[4/5]">
+                <Image
+                  src={media.doctorPhoto}
+                  alt={fill(about.portraitAlt, { name: doctor.name })}
+                  fill
+                  sizes="(min-width: 1024px) 40vw, (min-width: 640px) 28rem, 100vw"
+                  className="object-cover object-top"
+                />
+                <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-navy-950/80 to-transparent" aria-hidden />
+              </div>
+            ) : (
             <div className="relative flex aspect-[4/5] flex-col items-center justify-end">
               <svg viewBox="0 0 200 220" className="w-3/4 text-navy-500/70" aria-hidden>
                 <circle cx="100" cy="72" r="40" fill="currentColor" />
@@ -30,22 +40,26 @@ export function About() {
                 <circle cx="94" cy="198" r="6" fill="#2fbaad" />
               </svg>
             </div>
+            )}
             <figcaption className="absolute inset-x-4 bottom-4 flex items-center gap-3 rounded-2xl border border-white/10 bg-white/10 p-3 text-white backdrop-blur-md">
               <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15">
                 <UserRound className="h-5 w-5" aria-hidden />
               </span>
               <span className="min-w-0">
                 <span className="block truncate font-display text-base font-semibold">{doctor.name}</span>
-                <span className="block text-xs text-navy-200">Portrait placeholder</span>
+                {!media.doctorPhoto && <span className="block text-xs text-navy-200">{about.portraitPlaceholder}</span>}
+                {media.doctorPhoto && <span className="block text-xs text-navy-200">{doctor.designation}</span>}
               </span>
             </figcaption>
           </figure>
 
           <div className="absolute -right-3 top-8 rounded-2xl bg-white p-4 text-center shadow-lift sm:-right-8">
             <span className="block font-display text-3xl font-semibold text-teal-600">{doctor.experienceYears}</span>
-            <span className="block text-xs font-medium text-navy-500">Years of
+            <span className="block text-xs font-medium text-navy-500">
+              {about.yearsOf}
               <br />
-              Experience</span>
+              {about.experience}
+            </span>
           </div>
         </Reveal>
 
@@ -53,20 +67,20 @@ export function About() {
         <div>
           <SectionHeading
             align="left"
-            eyebrow="About the Doctor"
+            eyebrow={about.eyebrow}
             id="about-title"
             title={
               <>
-                Thoughtful, specialist care for <span className="italic text-teal-600">every liver</span>.
+                {about.titleBefore}
+                <span className="italic text-teal-600">{about.titleEm}</span>
+                {about.titleAfter}
               </>
             }
           />
 
           <Reveal delay={0.1}>
             <p className="mt-6 text-base leading-relaxed text-navy-600 sm:text-lg">
-              {doctor.name} is a {doctor.designation.toLowerCase()} focused on the diagnosis and long-term
-              management of liver conditions. [Add a short professional introduction here — clinical interests,
-              current role and approach to patient care.]
+              {fill(about.intro, { name: doctor.name })}
             </p>
           </Reveal>
 
@@ -95,10 +109,9 @@ export function About() {
           <Reveal delay={0.2}>
             <blockquote className="relative mt-8 rounded-2xl bg-gradient-to-br from-navy-900 to-navy-800 p-6 text-white shadow-lift">
               <Quote className="absolute top-5 right-5 h-8 w-8 text-teal-400/40" aria-hidden />
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-teal-300">Consultation philosophy</p>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-teal-300">{about.philosophyLabel}</p>
               <p className="mt-3 font-display text-lg leading-relaxed text-navy-50 sm:text-xl">
-                “Every patient deserves time, a clear explanation and a plan they understand. Good care begins with
-                listening.”
+                {about.philosophy}
               </p>
             </blockquote>
           </Reveal>
@@ -116,16 +129,11 @@ export function About() {
           </Reveal>
 
           <Reveal delay={0.3} className="mt-9">
-            <ReadMore>
+            <ReadMore labels={{ more: t.common.readMore, less: t.common.showLess }}>
               <div className="space-y-4 text-base leading-relaxed text-navy-600">
-                <p>
-                  [Extended biography placeholder — training pathway, areas of clinical focus and the settings in which
-                  the doctor practises. Replace with verified information.]
-                </p>
-                <p>
-                  [Optional: academic interests, teaching roles, research publications or professional society
-                  involvement — include only details that have been confirmed.]
-                </p>
+                {about.more.map((para) => (
+                  <p key={para}>{para}</p>
+                ))}
               </div>
             </ReadMore>
           </Reveal>

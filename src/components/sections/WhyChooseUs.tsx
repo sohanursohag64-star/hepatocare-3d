@@ -1,33 +1,12 @@
 import { BookOpenCheck, HandHeart, Stethoscope, UserRoundCog, type LucideIcon } from "lucide-react";
+import type { Dict } from "@/i18n/dictionaries";
 import { RevealItem } from "../ui/Reveal";
 import { SectionHeading } from "../ui/SectionHeading";
 
-type Feature = { title: string; description: string; icon: LucideIcon };
+const icons: LucideIcon[] = [Stethoscope, BookOpenCheck, UserRoundCog, HandHeart];
 
-const features: Feature[] = [
-  {
-    title: "Specialist Consultation",
-    description: "Direct consultation with a liver specialist who reviews your concerns, history and reports in detail.",
-    icon: Stethoscope,
-  },
-  {
-    title: "Evidence-Based Medical Care",
-    description: "Clinical decisions guided by current, recognised medical evidence and professional guidelines.",
-    icon: BookOpenCheck,
-  },
-  {
-    title: "Personalized Treatment Approach",
-    description: "Care plans tailored to the individual — no two patients, and no two livers, are exactly alike.",
-    icon: UserRoundCog,
-  },
-  {
-    title: "Patient-Centered Care",
-    description: "Clear explanations, shared decisions and time for your questions at every visit.",
-    icon: HandHeart,
-  },
-];
-
-export function WhyChooseUs() {
+export function WhyChooseUs({ t }: { t: Dict["why"] }) {
+  const features = t.items.map((item, i) => ({ ...item, icon: icons[i] }));
   return (
     <section aria-labelledby="why-title" className="relative isolate overflow-hidden bg-navy-950 py-20 text-white sm:py-28">
       <div className="bg-grid absolute inset-0 -z-10 opacity-60 invert" aria-hidden />
@@ -38,9 +17,9 @@ export function WhyChooseUs() {
         <SectionHeading
           id="why-title"
           tone="dark"
-          eyebrow="Why Choose HepatoCare"
-          title="Care that combines specialist knowledge with genuine attention"
-          description="A practice built around four commitments that guide every consultation."
+          eyebrow={t.eyebrow}
+          title={t.title}
+          description={t.description}
         />
 
         <ul className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">

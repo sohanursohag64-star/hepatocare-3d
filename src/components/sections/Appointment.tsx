@@ -1,15 +1,12 @@
 import { CalendarCheck, Clock3, Mail, Phone } from "lucide-react";
-import { chamber } from "@/lib/site";
+import type { Dict } from "@/i18n/dictionaries";
+import { contact } from "@/lib/site";
 import { Reveal } from "../ui/Reveal";
 import { AppointmentForm } from "./AppointmentForm";
 
-const steps = [
-  { title: "Send a request", text: "Share your name, phone number and preferred time." },
-  { title: "Chamber follow-up", text: "The chamber reviews availability for your preferred slot." },
-  { title: "Confirmed visit", text: "Your visit is confirmed only once the chamber has confirmed it with you." },
-];
-
-export function Appointment() {
+export function Appointment({ t }: { t: Dict }) {
+  const { appointment, chamber } = t;
+  const steps = appointment.steps;
   return (
     <section
       id="appointment"
@@ -24,23 +21,25 @@ export function Appointment() {
         <Reveal className="text-white">
           <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-teal-300">
             <CalendarCheck className="h-4 w-4" aria-hidden />
-            Appointments
+            {appointment.eyebrow}
           </p>
           <h2
             id="appointment-title"
             className="mt-4 text-balance font-display text-3xl leading-[1.15] font-medium tracking-tight sm:text-4xl lg:text-5xl"
           >
-            Take the first step towards <span className="italic text-teal-300">better liver health</span>.
+            {appointment.titleBefore}
+            <span className="italic text-teal-300">{appointment.titleEm}</span>
+            {appointment.titleAfter}
           </h2>
           <p className="mt-5 max-w-lg text-base leading-relaxed text-navy-200 sm:text-lg">
-            Request a consultation at a time that suits you. The chamber will get back to you to confirm availability.
+            {appointment.description}
           </p>
 
           <ol className="mt-9 space-y-5">
             {steps.map((s, i) => (
               <li key={s.title} className="flex gap-4">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-teal-400/40 bg-teal-400/10 font-display text-sm font-semibold text-teal-300">
-                  {i + 1}
+                  {(i + 1).toLocaleString(t.numberLocale)}
                 </span>
                 <span>
                   <span className="block font-semibold text-white">{s.title}</span>
@@ -52,18 +51,18 @@ export function Appointment() {
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <a
-              href={chamber.phoneHref}
+              href={contact.phoneHref}
               className="inline-flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm transition hover:border-teal-400/50 hover:bg-white/10"
             >
               <Phone className="h-4 w-4 text-teal-300" aria-hidden />
-              {chamber.phone}
+              {contact.phone}
             </a>
             <a
-              href={`mailto:${chamber.email}`}
+              href={`mailto:${contact.email}`}
               className="inline-flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm transition hover:border-teal-400/50 hover:bg-white/10"
             >
               <Mail className="h-4 w-4 text-teal-300" aria-hidden />
-              {chamber.email}
+              {contact.email}
             </a>
             <span className="inline-flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-navy-200">
               <Clock3 className="h-4 w-4 text-teal-300" aria-hidden />
@@ -73,7 +72,7 @@ export function Appointment() {
         </Reveal>
 
         <Reveal delay={0.1}>
-          <AppointmentForm />
+          <AppointmentForm t={t.form} dateLocale={t.dateLocale} />
         </Reveal>
       </div>
     </section>
