@@ -1,4 +1,4 @@
-import { Award, BadgeCheck, GraduationCap, Quote, UserRound } from "lucide-react";
+import { Award, BadgeCheck, GraduationCap, Quote, Stethoscope, UserRound } from "lucide-react";
 import Image from "next/image";
 import { fill, type Dict } from "@/i18n/dictionaries";
 import { media } from "@/lib/site";
@@ -43,7 +43,7 @@ export function About({ t }: { t: Dict }) {
             )}
             <figcaption className="absolute inset-x-4 bottom-4 flex items-center gap-3 rounded-2xl border border-white/10 bg-white/10 p-3 text-white backdrop-blur-md">
               <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15">
-                <UserRound className="h-5 w-5" aria-hidden />
+                {media.doctorPhoto ? <Stethoscope className="h-5 w-5" aria-hidden /> : <UserRound className="h-5 w-5" aria-hidden />}
               </span>
               <span className="min-w-0">
                 <span className="block truncate font-display text-base font-semibold">{doctor.name}</span>

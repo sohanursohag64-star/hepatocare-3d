@@ -38,7 +38,9 @@ export const media = {
    * Doctor's portrait, placed in /public (e.g. "/doctor.jpg").
    * Leave empty to show the illustrated placeholder.
    */
-  doctorPhoto: "",
+  doctorPhoto: "/doctor.jpg",
+  /** Square face crop used for small avatars. */
+  doctorAvatar: "/doctor-avatar.jpg",
   /**
    * Google Maps "Embed a map" URL (Share → Embed a map → copy the src="…" value).
    * Leave empty to show the illustrated map placeholder.

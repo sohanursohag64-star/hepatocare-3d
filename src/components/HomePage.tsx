@@ -1,5 +1,5 @@
 import { localeHome, type Dict } from "@/i18n/dictionaries";
-import { contact, schedule, site } from "@/lib/site";
+import { contact, media, schedule, site } from "@/lib/site";
 import { Footer } from "./Footer";
 import { Navbar } from "./Navbar";
 import { About } from "./sections/About";
@@ -28,6 +28,7 @@ export function HomePage({ t }: { t: Dict }) {
     telephone: contact.phone.replace(/[\s-]/g, ""),
     email: contact.email,
     medicalSpecialty: "Hepatology",
+    ...(media.doctorPhoto ? { image: new URL(media.doctorPhoto, site.url).toString() } : {}),
     address: {
       "@type": "PostalAddress",
       name: t.chamber.name,

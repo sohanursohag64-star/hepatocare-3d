@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { localeHome, type Dict } from "@/i18n/dictionaries";
-import { site } from "@/lib/site";
+import { media, site } from "@/lib/site";
 import { MotionProvider } from "./ui/MotionProvider";
 
 export const viewport: Viewport = {
@@ -41,8 +41,14 @@ export function buildMetadata(t: Dict): Metadata {
       locale: t.locale === "bn" ? "bn_BD" : "en_GB",
       alternateLocale: t.locale === "bn" ? ["en_GB"] : ["bn_BD"],
       url: localeHome[t.locale],
+      images: media.doctorPhoto ? [{ url: media.doctorPhoto, width: 1000, height: 1250, alt: t.doctor.name }] : undefined,
     },
-    twitter: { card: "summary_large_image", title: t.meta.ogTitle, description: t.meta.description },
+    twitter: {
+      card: "summary_large_image",
+      title: t.meta.ogTitle,
+      description: t.meta.description,
+      images: media.doctorPhoto ? [media.doctorPhoto] : undefined,
+    },
     robots: { index: true, follow: true },
   };
 }
