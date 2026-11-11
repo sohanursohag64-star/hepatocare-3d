@@ -4,6 +4,7 @@ import { About } from "@/components/sections/About";
 import { Appointment } from "@/components/sections/Appointment";
 import { Chamber } from "@/components/sections/Chamber";
 import { Hero } from "@/components/sections/Hero";
+import { LiverStory } from "@/components/sections/LiverStory";
 import { PatientEducation } from "@/components/sections/PatientEducation";
 import { Specialties } from "@/components/sections/Specialties";
 import { WhyChooseUs } from "@/components/sections/WhyChooseUs";
@@ -14,6 +15,7 @@ export default function HomePage() {
       <Navbar />
       <main id="main">
         <Hero />
+        <LiverStory />
         <About />
         <Specialties />
         <WhyChooseUs />

@@ -6,6 +6,8 @@ import { ArrowRight, CalendarCheck, HeartPulse, ShieldCheck, Stethoscope } from 
 import { doctor } from "@/lib/site";
 import { Liver3D } from "../three/Liver3D";
 import { ButtonLink } from "../ui/Button";
+import { Magnetic } from "../ui/Magnetic";
+import { WordReveal } from "../ui/WordReveal";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -25,8 +27,9 @@ export function Hero() {
     >
       {/* Background atmosphere */}
       <div className="bg-grid absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_75%)]" aria-hidden />
-      <div className="absolute -top-40 -right-40 -z-10 h-[34rem] w-[34rem] rounded-full bg-teal-200/40 blur-3xl" aria-hidden />
-      <div className="absolute top-1/3 -left-48 -z-10 h-[28rem] w-[28rem] rounded-full bg-navy-200/40 blur-3xl" aria-hidden />
+      <div className="animate-aura absolute -top-40 -right-40 -z-10 h-[34rem] w-[34rem] rounded-full bg-teal-200/45 blur-3xl" aria-hidden />
+      <div className="animate-aura-slow absolute top-1/3 -left-48 -z-10 h-[28rem] w-[28rem] rounded-full bg-navy-200/45 blur-3xl" aria-hidden />
+      <div className="animate-aura absolute bottom-0 left-1/3 -z-10 h-72 w-72 rounded-full bg-sky-200/40 blur-3xl [animation-delay:-6s]" aria-hidden />
 
       <div className="container-page grid items-center gap-14 lg:grid-cols-[1.05fr_1fr] lg:gap-10">
         {/* Copy */}
@@ -45,29 +48,36 @@ export function Hero() {
             Specialist Liver Care
           </motion.p>
 
-          <motion.h1
+          <h1
             id="hero-title"
-            variants={fadeUp}
-            initial="hidden"
-            animate="show"
-            custom={1}
-            className="mt-6 text-balance font-display text-[2.6rem] leading-[1.05] font-medium tracking-tight text-navy-900 sm:text-6xl lg:text-[4.25rem]"
+            className="mt-6 font-display text-[2.6rem] leading-[1.05] font-medium tracking-tight text-balance text-navy-900 sm:text-6xl lg:text-[4.25rem]"
           >
-            Your Liver Health,{" "}
+            <WordReveal text="Your Liver Health," delay={0.15} />{" "}
             <span className="relative whitespace-nowrap">
-              <span className="bg-gradient-to-r from-teal-500 to-teal-700 bg-clip-text italic text-transparent">
-                Our Priority.
-              </span>
+              <WordReveal
+                text="Our Priority."
+                delay={0.45}
+                wordClassName="bg-gradient-to-r from-teal-500 to-teal-700 bg-clip-text pr-[0.06em] italic text-transparent"
+              />
               <svg
                 viewBox="0 0 300 18"
                 className="absolute -bottom-2 left-0 h-3 w-full text-teal-300"
                 preserveAspectRatio="none"
                 aria-hidden
               >
-                <path d="M2 14 C 80 2, 220 2, 298 12" stroke="currentColor" strokeWidth="4" fill="none" strokeLinecap="round" />
+                <motion.path
+                  d="M2 14 C 80 2, 220 2, 298 12"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                  fill="none"
+                  strokeLinecap="round"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 1.1, delay: 0.95, ease: [0.22, 1, 0.36, 1] }}
+                />
               </svg>
             </span>
-          </motion.h1>
+          </h1>
 
           <motion.p
             variants={fadeUp}
@@ -104,14 +114,18 @@ export function Hero() {
             custom={4}
             className="mt-9 flex flex-col items-stretch gap-3 sm:flex-row sm:justify-center lg:justify-start"
           >
-            <ButtonLink href="#appointment" variant="primary" className="!px-7 !py-4">
-              <CalendarCheck className="h-4 w-4" aria-hidden />
-              Book an Appointment
-            </ButtonLink>
-            <ButtonLink href="#specialties" variant="secondary" className="!px-7 !py-4">
-              Explore Services
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
-            </ButtonLink>
+            <Magnetic>
+              <ButtonLink href="#appointment" variant="primary" className="shine w-full !px-7 !py-4">
+                <CalendarCheck className="h-4 w-4" aria-hidden />
+                Book an Appointment
+              </ButtonLink>
+            </Magnetic>
+            <Magnetic>
+              <ButtonLink href="#liver-story" variant="secondary" className="w-full !px-7 !py-4">
+                Explore the Liver Story
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
+              </ButtonLink>
+            </Magnetic>
           </motion.div>
         </div>
 

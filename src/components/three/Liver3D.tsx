@@ -1,47 +1,14 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import dynamic from "next/dynamic";
-import { Component, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { LiverIllustration } from "../LiverIllustration";
+import { SceneErrorBoundary, use3DCapability } from "./capability";
 import type { InteractionState } from "./LiverScene";
 
 /** The 3D scene (three.js + R3F) is code-split and only fetched when it will be used. */
 const LiverScene = dynamic(() => import("./LiverScene"), { ssr: false });
-
-class SceneErrorBoundary extends Component<{ onError: () => void; children: ReactNode }, { failed: boolean }> {
-  state = { failed: false };
-  static getDerivedStateFromError() {
-    return { failed: true };
-  }
-  componentDidCatch() {
-    this.props.onError();
-  }
-  render() {
-    return this.state.failed ? null : this.props.children;
-  }
-}
-
-type Capability = "pending" | "3d" | "fallback";
-
-function detectCapability(): Exclude<Capability, "pending"> {
-  try {
-    const nav = navigator as Navigator & {
-      deviceMemory?: number;
-      connection?: { saveData?: boolean };
-    };
-    if (nav.connection?.saveData) return "fallback";
-    if (nav.deviceMemory !== undefined && nav.deviceMemory < 2) return "fallback";
-    if (nav.hardwareConcurrency !== undefined && nav.hardwareConcurrency < 4) return "fallback";
-    const canvas = document.createElement("canvas");
-    const gl = canvas.getContext("webgl2") ?? canvas.getContext("webgl");
-    if (!gl) return "fallback";
-    (gl as WebGLRenderingContext).getExtension("WEBGL_lose_context")?.loseContext();
-    return "3d";
-  } catch {
-    return "fallback";
-  }
-}
 
 /** Labels for the anatomical hotspots; 3D anchor points live in the scene chunk (same order). */
 const HOTSPOTS = [
@@ -61,8 +28,7 @@ const HOTSPOTS = [
  * low-end devices, Save-Data, or when WebGL is unavailable.
  */
 export function Liver3D({ onHotspotChange }: { onHotspotChange?: (open: boolean) => void }) {
-  const reduceMotion = useReducedMotion();
-  const [capability, setCapability] = useState<Capability>("pending");
+  const [capability, setCapability] = use3DCapability();
   const [load, setLoad] = useState(false);
   const [ready, setReady] = useState(false);
   const [inView, setInView] = useState(true);
@@ -75,15 +41,6 @@ export function Liver3D({ onHotspotChange }: { onHotspotChange?: (open: boolean)
   const pointer = useRef<{ id: number; x: number; y: number; type: string } | null>(null);
 
   useEffect(() => onHotspotChange?.(openHotspot !== null), [openHotspot, onHotspotChange]);
-
-  // Decide once, on the client, whether 3D is appropriate.
-  useEffect(() => {
-    if (reduceMotion) {
-      setCapability("fallback");
-      return;
-    }
-    setCapability(detectCapability());
-  }, [reduceMotion]);
 
   // Defer fetching the 3D bundle until the browser is idle, so it never delays first paint.
   useEffect(() => {
