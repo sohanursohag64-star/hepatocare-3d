@@ -247,6 +247,25 @@ const en = {
     ],
   },
 
+  journey: {
+    eyebrow: "Your Visit",
+    title: "What your visit looks like",
+    description: "From arrival to heading home — a simple, friendly picture of a consultation at the chamber.",
+    play: "Play animation",
+    pause: "Pause animation",
+    goToStep: "Show step {n}: {title}",
+    sceneLabel: "Animated illustration: a patient drives to the chamber, checks in at reception, meets the doctor, and leaves reassured with a care plan.",
+    clinicDoor: "Chamber",
+    doctorDoor: "Doctor",
+    reception: "Reception",
+    steps: [
+      { title: "Arrive at the chamber", text: "Come at your confirmed time, with your previous reports and prescriptions." },
+      { title: "Quick check-in", text: "The front desk confirms your details and shows you to the doctor's room." },
+      { title: "An unhurried consultation", text: "The doctor listens, reviews your reports and explains things clearly." },
+      { title: "Leave with a clear plan", text: "Head home reassured, with written next steps you understand." },
+    ],
+  },
+
   faq: {
     eyebrow: "FAQ",
     title: "Questions patients often ask",
@@ -592,6 +611,25 @@ const bn: Dict = {
           "লিভার ফাংশন টেস্ট কী, এবং কেন এর ফলাফল চিকিৎসকের সঙ্গে মিলিয়ে দেখা ভালো। [খসড়া লেখা — চিকিৎসকের পর্যালোচনার অপেক্ষায়।]",
         readTime: "৬ মিনিটে পড়ুন",
       },
+    ],
+  },
+
+  journey: {
+    eyebrow: "আপনার ভিজিট",
+    title: "আপনার ভিজিট যেভাবে হয়",
+    description: "পৌঁছানো থেকে বাড়ি ফেরা পর্যন্ত — চেম্বারে একটি পরামর্শের সহজ ও বন্ধুত্বপূর্ণ চিত্র।",
+    play: "অ্যানিমেশন চালান",
+    pause: "অ্যানিমেশন থামান",
+    goToStep: "ধাপ {n} দেখুন: {title}",
+    sceneLabel: "অ্যানিমেটেড চিত্র: একজন রোগী গাড়িতে চেম্বারে আসেন, রিসেপশনে নাম লেখান, ডাক্তারের সঙ্গে দেখা করেন এবং চিকিৎসা পরিকল্পনা নিয়ে নিশ্চিন্ত মনে ফিরে যান।",
+    clinicDoor: "চেম্বার",
+    doctorDoor: "ডাক্তার",
+    reception: "রিসেপশন",
+    steps: [
+      { title: "চেম্বারে পৌঁছানো", text: "নিশ্চিত করা সময়ে আসুন, সঙ্গে আগের রিপোর্ট ও প্রেসক্রিপশন আনুন।" },
+      { title: "সহজ রেজিস্ট্রেশন", text: "রিসেপশন আপনার তথ্য নিশ্চিত করে ডাক্তারের রুমে পৌঁছে দেবে।" },
+      { title: "সময় নিয়ে পরামর্শ", text: "ডাক্তার মন দিয়ে শোনেন, রিপোর্ট দেখেন এবং সবকিছু স্পষ্টভাবে বুঝিয়ে বলেন।" },
+      { title: "স্পষ্ট পরিকল্পনা নিয়ে ফেরা", text: "পরবর্তী করণীয় লিখিতভাবে বুঝে নিয়ে নিশ্চিন্ত মনে বাড়ি ফিরুন।" },
     ],
   },
 

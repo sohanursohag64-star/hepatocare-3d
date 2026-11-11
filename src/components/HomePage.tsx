@@ -8,6 +8,7 @@ import { Faq } from "./sections/Faq";
 import { Hero } from "./sections/Hero";
 import { LiverStory } from "./sections/LiverStory";
 import { PatientEducation } from "./sections/PatientEducation";
+import { PatientJourney } from "./sections/PatientJourney";
 import { Specialties } from "./sections/Specialties";
 import { WhyChooseUs } from "./sections/WhyChooseUs";
 import { WhatsAppButton } from "./WhatsAppButton";
@@ -26,6 +27,7 @@ export function HomePage({ t }: { t: Dict }) {
         <PatientEducation t={t.education} />
         <Faq t={t.faq} />
         <Chamber t={t.chamber} newTab={t.common.opensNewTab} />
+        <PatientJourney t={t.journey} numberLocale={t.numberLocale} />
         <Appointment t={t} />
       </main>
       <Footer t={t} />
