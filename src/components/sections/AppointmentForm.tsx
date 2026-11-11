@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { CalendarDays, CircleAlert, CircleCheckBig, Clock3, Phone, Send, UserRound } from "lucide-react";
 import { Fragment, useEffect, useId, useState, type FormEvent } from "react";
 import type { Dict } from "@/i18n/dictionaries";
+import { schedule } from "@/lib/site";
 import { buttonClasses } from "../ui/Button";
 
 type Fields = { name: string; phone: string; date: string; time: string };
@@ -36,6 +37,10 @@ function validate(f: Fields, msg: Dict["form"]["errors"]): Errors {
 
   if (!f.date) errors.date = msg.dateRequired;
   else if (f.date < todayISO()) errors.date = msg.datePast;
+  else {
+    const [y, m, d] = f.date.split("-").map(Number);
+    if (schedule.closedWeekdays.includes(new Date(y, m - 1, d).getDay())) errors.date = msg.dateClosed;
+  }
 
   if (!f.time) errors.time = msg.timeRequired;
   return errors;
@@ -208,7 +213,7 @@ export function AppointmentForm({ t, dateLocale }: { t: Dict["form"]; dateLocale
                     type="tel"
                     inputMode="tel"
                     autoComplete="tel"
-                    placeholder="+00 0000 000 000"
+                    placeholder="01XXX-XXXXXX"
                     value={fields.phone}
                     onChange={(e) => update("phone", e.target.value)}
                     onBlur={() => blur("phone")}

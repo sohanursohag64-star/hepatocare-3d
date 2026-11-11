@@ -128,6 +128,7 @@ export function About({ t }: { t: Dict }) {
             </dl>
           </Reveal>
 
+          {about.more.length > 0 && (
           <Reveal delay={0.3} className="mt-9">
             <ReadMore labels={{ more: t.common.readMore, less: t.common.showLess }}>
               <div className="space-y-4 text-base leading-relaxed text-navy-600">
@@ -137,6 +138,7 @@ export function About({ t }: { t: Dict }) {
               </div>
             </ReadMore>
           </Reveal>
+          )}
         </div>
       </div>
     </section>

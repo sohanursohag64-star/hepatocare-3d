@@ -1,4 +1,5 @@
-import type { Dict } from "@/i18n/dictionaries";
+import { localeHome, type Dict } from "@/i18n/dictionaries";
+import { contact, schedule, site } from "@/lib/site";
 import { Footer } from "./Footer";
 import { Navbar } from "./Navbar";
 import { About } from "./sections/About";
@@ -15,8 +16,35 @@ import { WhatsAppButton } from "./WhatsAppButton";
 
 /** The full homepage, rendered in the given language. */
 export function HomePage({ t }: { t: Dict }) {
+  const openDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].filter(
+    (_, i) => !schedule.closedWeekdays.includes(i),
+  );
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Physician",
+    name: t.doctor.name,
+    description: t.meta.description,
+    url: new URL(localeHome[t.locale], site.url).toString(),
+    telephone: contact.phone.replace(/[\s-]/g, ""),
+    email: contact.email,
+    medicalSpecialty: "Hepatology",
+    address: {
+      "@type": "PostalAddress",
+      name: t.chamber.name,
+      addressLocality: schedule.city,
+      addressCountry: schedule.country,
+    },
+    openingHoursSpecification: [
+      { "@type": "OpeningHoursSpecification", dayOfWeek: openDays, opens: schedule.opens, closes: schedule.closes },
+    ],
+  };
   return (
     <>
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger -- static, trusted JSON built from site config
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
+      />
       <Navbar t={t} />
       <main id="main">
         <Hero t={t} />
