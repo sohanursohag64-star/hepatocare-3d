@@ -35,6 +35,21 @@
   --shadow-glow: 0 12px 32px -10px rgb(20 158 147 / 0.55);
 
   --animate-spin-slow: spin 40s linear infinite;
+  --animate-aura: aura 18s ease-in-out infinite;
+  --animate-aura-slow: aura 26s ease-in-out infinite reverse;
+
+  @keyframes aura {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    33% {
+      transform: translate3d(6%, 8%, 0) scale(1.08);
+    }
+    66% {
+      transform: translate3d(-5%, 4%, 0) scale(0.95);
+    }
+  }
   --animate-spin-slower: spin 70s linear infinite reverse;
 }
 
@@ -84,4 +99,24 @@
     linear-gradient(to right, rgb(13 24 56 / 0.045) 1px, transparent 1px),
     linear-gradient(to bottom, rgb(13 24 56 / 0.045) 1px, transparent 1px);
   background-size: 44px 44px;
+}
+
+/* Light sweep across an element on hover (premium cards and buttons). */
+@utility shine {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.35) 48%, transparent 66%);
+    transform: translateX(-120%);
+    transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  &:hover::after {
+    transform: translateX(120%);
+  }
 }

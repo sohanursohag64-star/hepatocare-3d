@@ -198,3 +198,90 @@ export function createVesselGeometry(points: [number, number, number][], radius:
   );
   return new THREE.TubeGeometry(curve, segments, radius, 20, false);
 }
+
+// ---------------------------------------------------------------------------
+// Illustrative "condition" shapes, used as morph targets by the Liver Story
+// section. These are stylised educational visuals, not diagnostic depictions.
+// ---------------------------------------------------------------------------
+
+function hash3(x: number, y: number, z: number) {
+  const h = Math.sin(x * 127.1 + y * 311.7 + z * 74.7) * 43758.5453;
+  return h - Math.floor(h);
+}
+
+/** Distance to the nearest random feature point (Worley / cellular noise). */
+function cellular(x: number, y: number, z: number) {
+  const xi = Math.floor(x);
+  const yi = Math.floor(y);
+  const zi = Math.floor(z);
+  let best = 9;
+  for (let i = -1; i <= 1; i++)
+    for (let j = -1; j <= 1; j++)
+      for (let k = -1; k <= 1; k++) {
+        const cx = xi + i;
+        const cy = yi + j;
+        const cz = zi + k;
+        const px = cx + hash3(cx, cy, cz);
+        const py = cy + hash3(cy, cz, cx);
+        const pz = cz + hash3(cz, cx, cy);
+        const d = Math.hypot(px - x, py - y, pz - z);
+        if (d < best) best = d;
+      }
+  return best;
+}
+
+/**
+ * Adds two morph targets to a liver geometry:
+ *  0 — "fatty": softly enlarged, rounder edges.
+ *  1 — "cirrhosis": smaller, with a firm, nodular surface.
+ */
+export function addConditionMorphs(geometry: THREE.BufferGeometry) {
+  const pos = geometry.getAttribute("position") as THREE.BufferAttribute;
+  const nrm = geometry.getAttribute("normal") as THREE.BufferAttribute;
+  const count = pos.count;
+  const fatty = new Float32Array(count * 3);
+  const nodular = new Float32Array(count * 3);
+  const freq = 5.5;
+
+  for (let i = 0; i < count; i++) {
+    const x = pos.getX(i);
+    const y = pos.getY(i);
+    const z = pos.getZ(i);
+    const nx = nrm.getX(i);
+    const ny = nrm.getY(i);
+    const nz = nrm.getZ(i);
+
+    // Fatty: inflate along the normal, a little more on the thick right lobe.
+    const inflate = 0.05 + 0.04 * THREE.MathUtils.clamp((0.5 - x) / 2.5, 0, 1);
+    fatty[i * 3] = x + nx * inflate;
+    fatty[i * 3 + 1] = y + ny * inflate;
+    fatty[i * 3 + 2] = z + nz * inflate * 1.4;
+
+    // Cirrhosis: shrink slightly, then raise rounded nodules from cellular noise.
+    const f1 = cellular(x * freq, y * freq, z * freq);
+    const bump = Math.pow(THREE.MathUtils.clamp(1 - f1 / 0.62, 0, 1), 1.6) * 0.06;
+    const shrink = -0.035;
+    nodular[i * 3] = x * 0.94 + nx * (bump + shrink);
+    nodular[i * 3 + 1] = y * 0.94 + ny * (bump + shrink);
+    nodular[i * 3 + 2] = z * 0.92 + nz * (bump + shrink);
+  }
+
+  const normalsFor = (positions: Float32Array) => {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    g.setIndex(geometry.getIndex());
+    g.computeVertexNormals();
+    const n = g.getAttribute("normal") as THREE.BufferAttribute;
+    g.setIndex(null);
+    g.dispose();
+    return n;
+  };
+
+  geometry.morphAttributes.position = [
+    new THREE.BufferAttribute(fatty, 3),
+    new THREE.BufferAttribute(nodular, 3),
+  ];
+  geometry.morphAttributes.normal = [normalsFor(fatty), normalsFor(nodular)];
+  geometry.morphTargetsRelative = false;
+  return geometry;
+}

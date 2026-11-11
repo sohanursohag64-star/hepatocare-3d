@@ -64,7 +64,7 @@ export function Specialties() {
             <RevealItem
               key={s.title}
               delay={0.06 * i}
-              className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-white bg-white p-7 shadow-soft transition-[translate,box-shadow,border-color] duration-500 hover:-translate-y-1.5 hover:border-teal-100 hover:shadow-lift"
+              className="shine group relative flex h-full flex-col overflow-hidden rounded-3xl border border-white bg-white p-7 shadow-soft transition-[translate,box-shadow,border-color] duration-500 hover:-translate-y-1.5 hover:border-teal-100 hover:shadow-lift"
             >
                 <div
                   className="absolute -top-16 -right-16 h-40 w-40 rounded-full bg-teal-100/0 transition-colors duration-500 group-hover:bg-teal-100/70"

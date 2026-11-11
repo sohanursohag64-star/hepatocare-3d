@@ -58,7 +58,7 @@ export function PatientEducation() {
             <RevealItem
               key={a.title}
               delay={0.08 * i}
-              className="group flex flex-col overflow-hidden rounded-3xl border border-navy-100 bg-white shadow-soft transition-[translate,box-shadow] duration-500 hover:-translate-y-1.5 hover:shadow-lift"
+              className="shine group flex flex-col overflow-hidden rounded-3xl border border-navy-100 bg-white shadow-soft transition-[translate,box-shadow] duration-500 hover:-translate-y-1.5 hover:shadow-lift"
             >
               <article className="flex h-full flex-col">
                 <div className={`relative flex h-48 items-center justify-center overflow-hidden bg-gradient-to-br ${a.gradient}`}>
