@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  /* Latin glyphs come from the first font; Bengali glyphs fall through to the Bengali font (Bangla page only). */
+  --font-sans: var(--font-jakarta), var(--font-bn-sans, ui-sans-serif), system-ui, sans-serif;
+  --font-display: var(--font-fraunces), var(--font-bn-serif, ui-serif), Georgia, serif;
 
   --color-navy-50: #f2f5fb;
   --color-navy-100: #e1e8f5;
@@ -118,5 +119,35 @@
   }
   &:hover::after {
     transform: translateX(120%);
+  }
+}
+
+/* ---- Bangla typography -------------------------------------------------- */
+/* Bengali script needs more vertical room (vowel signs above and below),
+   has no italics and no letter case. */
+:lang(bn) {
+  & h1 {
+    line-height: 1.2;
+    letter-spacing: 0;
+  }
+  & h2,
+  & h3 {
+    line-height: 1.35;
+    letter-spacing: 0;
+  }
+  & p,
+  & li,
+  & dd {
+    line-height: 1.75;
+  }
+  & .italic {
+    font-style: normal;
+  }
+  & .uppercase {
+    letter-spacing: 0.04em;
+  }
+  & .word-mask {
+    padding-top: 0.12em;
+    padding-bottom: 0.22em;
   }
 }

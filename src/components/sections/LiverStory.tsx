@@ -6,52 +6,22 @@ import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { LiverIllustration } from "../LiverIllustration";
 import { SceneErrorBoundary, use3DCapability } from "../three/capability";
+import type { Dict } from "@/i18n/dictionaries";
 import { ButtonLink } from "../ui/Button";
 
 const ShowcaseScene = dynamic(() => import("../three/ShowcaseScene"), { ssr: false });
 
-type Step = { eyebrow: string; title: string; body: string; accent: string; svgFilter: string };
-
-/** Educational story steps. General descriptions only — no diagnostic or treatment claims. */
-const STEPS: Step[] = [
-  {
-    eyebrow: "The healthy liver",
-    title: "Quietly working, around the clock",
-    body: "A healthy liver is smooth and reddish-brown. It is one of the largest organs in the body and plays a part in digestion, metabolism and filtering the blood.",
-    accent: "text-sky-300",
-    svgFilter: "none",
-  },
-  {
-    eyebrow: "Fatty liver",
-    title: "When fat builds up in liver cells",
-    body: "In fatty liver disease, fat accumulates within the liver. It is often first noticed on routine blood tests or imaging, and a specialist can help you understand what it means for you.",
-    accent: "text-amber-300",
-    svgFilter: "sepia(0.45) saturate(1.3) brightness(1.08)",
-  },
-  {
-    eyebrow: "Hepatitis",
-    title: "Inflammation of the liver",
-    body: "Hepatitis means inflammation of the liver. It has several possible causes, including viral infections such as hepatitis B and C.",
-    accent: "text-rose-300",
-    svgFilter: "saturate(1.5) hue-rotate(-8deg)",
-  },
-  {
-    eyebrow: "Cirrhosis",
-    title: "Long-term scarring",
-    body: "Over time, ongoing liver injury can lead to scarring. A cirrhotic liver may become firmer and more uneven, which is why regular specialist follow-up matters.",
-    accent: "text-orange-300",
-    svgFilter: "brightness(0.8) contrast(1.15) sepia(0.25)",
-  },
-  {
-    eyebrow: "Specialist care",
-    title: "Your liver, in caring hands",
-    body: "Every liver story is different. Good care starts with a careful conversation, a thorough review of your reports and a plan made together with you.",
-    accent: "text-teal-300",
-    svgFilter: "none",
-  },
+/** Visual styling per story step (copy comes from the dictionary, same order). */
+const STEP_STYLES = [
+  { accent: "text-sky-300", svgFilter: "none" },
+  { accent: "text-amber-300", svgFilter: "sepia(0.45) saturate(1.3) brightness(1.08)" },
+  { accent: "text-rose-300", svgFilter: "saturate(1.5) hue-rotate(-8deg)" },
+  { accent: "text-orange-300", svgFilter: "brightness(0.8) contrast(1.15) sepia(0.25)" },
+  { accent: "text-teal-300", svgFilter: "none" },
 ];
 
-export function LiverStory() {
+export function LiverStory({ t, numberLocale }: { t: Dict["story"]; numberLocale: string }) {
+  const STEPS = t.steps.map((step, i) => ({ ...step, ...STEP_STYLES[i] }));
   const [capability, setCapability] = use3DCapability();
   const [active, setActive] = useState(0);
   const [inView, setInView] = useState(false);
@@ -133,16 +103,18 @@ export function LiverStory() {
         <div className="mx-auto max-w-2xl text-center">
           <p className="inline-flex items-center gap-2 text-xs font-bold tracking-[0.2em] text-teal-300 uppercase">
             <span className="h-px w-6 bg-teal-300" aria-hidden />
-            The Liver Story
+            {t.eyebrow}
           </p>
           <h2
             id="story-title"
             className="mt-4 font-display text-3xl leading-[1.15] font-medium tracking-tight text-balance sm:text-4xl lg:text-5xl"
           >
-            Understanding the organ <span className="text-teal-300 italic">we care for</span>
+            {t.titleBefore}
+            <span className="text-teal-300 italic">{t.titleEm}</span>
+            {t.titleAfter}
           </h2>
           <p className="mt-4 text-base text-navy-200 sm:text-lg">
-            Scroll to see how common liver conditions can change the liver — an illustrated guide for patients.
+            {t.intro}
           </p>
         </div>
       </div>
@@ -199,7 +171,7 @@ export function LiverStory() {
               </ol>
               <p className="flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1 text-[0.65rem] text-navy-300 backdrop-blur">
                 <Info className="h-3 w-3" aria-hidden />
-                Illustrative visual · not a diagnostic image
+                {t.disclaimer}
               </p>
             </div>
           </div>
@@ -221,14 +193,14 @@ export function LiverStory() {
                 }`}
               >
                 <p className={`text-xs font-bold tracking-[0.2em] uppercase ${s.accent}`}>
-                  {String(i + 1).padStart(2, "0")} · {s.eyebrow}
+                  {(i + 1).toLocaleString(numberLocale, { minimumIntegerDigits: 2 })} · {s.eyebrow}
                 </p>
                 <h3 className="mt-3 font-display text-2xl leading-tight font-medium sm:text-3xl lg:text-4xl">{s.title}</h3>
                 <p className="mt-4 text-base leading-relaxed text-navy-200 sm:text-lg">{s.body}</p>
                 {i === STEPS.length - 1 && (
                   <ButtonLink href="#appointment" variant="primary" className="mt-7">
                     <CalendarCheck className="h-4 w-4" aria-hidden />
-                    Book a Consultation
+                    {t.cta}
                   </ButtonLink>
                 )}
               </div>

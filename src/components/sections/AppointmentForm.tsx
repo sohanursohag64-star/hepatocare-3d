@@ -2,7 +2,8 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { CalendarDays, CircleAlert, CircleCheckBig, Clock3, Phone, Send, UserRound } from "lucide-react";
-import { useEffect, useId, useState, type FormEvent } from "react";
+import { Fragment, useEffect, useId, useState, type FormEvent } from "react";
+import type { Dict } from "@/i18n/dictionaries";
 import { buttonClasses } from "../ui/Button";
 
 type Fields = { name: string; phone: string; date: string; time: string };
@@ -10,31 +11,53 @@ type Errors = Partial<Record<keyof Fields, string>>;
 
 const empty: Fields = { name: "", phone: "", date: "", time: "" };
 
-const timeSlots = ["Morning (9 AM – 12 PM)", "Afternoon (12 PM – 4 PM)", "Evening (4 PM – 8 PM)"];
-
 function todayISO() {
   const d = new Date();
   d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
   return d.toISOString().slice(0, 10);
 }
 
-function validate(f: Fields): Errors {
+/** Convert Bangla digits (০–৯) to ASCII so phone numbers typed in Bangla validate. */
+function toAsciiDigits(value: string) {
+  return value.replace(/[০-৯]/g, (d) => String(d.charCodeAt(0) - 0x09e6));
+}
+
+function validate(f: Fields, msg: Dict["form"]["errors"]): Errors {
   const errors: Errors = {};
   const name = f.name.trim();
-  if (!name) errors.name = "Please enter the patient's name.";
-  else if (name.length < 2) errors.name = "Name should be at least 2 characters.";
-  else if (!/^[\p{L}\p{M}.'\- ]+$/u.test(name)) errors.name = "Name can contain letters, spaces, apostrophes and hyphens only.";
+  if (!name) errors.name = msg.nameRequired;
+  else if (name.length < 2) errors.name = msg.nameShort;
+  else if (!/^[\p{L}\p{M}.'\- ]+$/u.test(name)) errors.name = msg.nameInvalid;
 
-  const digits = f.phone.replace(/\D/g, "");
-  if (!f.phone.trim()) errors.phone = "Please enter a phone number.";
-  else if (!/^\+?[\d\s()-]+$/.test(f.phone.trim()) || digits.length < 7 || digits.length > 15)
-    errors.phone = "Please enter a valid phone number (7–15 digits).";
+  const phone = toAsciiDigits(f.phone.trim());
+  const digits = phone.replace(/\D/g, "");
+  if (!phone) errors.phone = msg.phoneRequired;
+  else if (!/^\+?[\d\s()-]+$/.test(phone) || digits.length < 7 || digits.length > 15) errors.phone = msg.phoneInvalid;
 
-  if (!f.date) errors.date = "Please choose a preferred date.";
-  else if (f.date < todayISO()) errors.date = "Please choose today or a future date.";
+  if (!f.date) errors.date = msg.dateRequired;
+  else if (f.date < todayISO()) errors.date = msg.datePast;
 
-  if (!f.time) errors.time = "Please choose a preferred time.";
+  if (!f.time) errors.time = msg.timeRequired;
   return errors;
+}
+
+/** Render a template, bolding the {token} values. */
+function Rich({ template, values }: { template: string; values: Record<string, string> }) {
+  const parts = template.split(/(\{\w+\})/g);
+  return (
+    <>
+      {parts.map((part, i) => {
+        const key = /^\{(\w+)\}$/.exec(part)?.[1];
+        return key && key in values ? (
+          <span key={i} className="font-semibold text-navy-900">
+            {values[key]}
+          </span>
+        ) : (
+          <Fragment key={i}>{part}</Fragment>
+        );
+      })}
+    </>
+  );
 }
 
 /**
@@ -42,7 +65,7 @@ function validate(f: Fields): Errors {
  * Phase 1 — the success state only acknowledges the request locally and
  * makes clear that the appointment is not confirmed.
  */
-export function AppointmentForm() {
+export function AppointmentForm({ t, dateLocale }: { t: Dict["form"]; dateLocale: string }) {
   const uid = useId();
   const [fields, setFields] = useState<Fields>(empty);
   const [errors, setErrors] = useState<Errors>({});
@@ -58,17 +81,17 @@ export function AppointmentForm() {
   const update = (k: keyof Fields, v: string) => {
     const next = { ...fields, [k]: v };
     setFields(next);
-    if (touched[k]) setErrors(validate(next));
+    if (touched[k]) setErrors(validate(next, t.errors));
   };
 
   const blur = (k: keyof Fields) => {
     setTouched((t) => ({ ...t, [k]: true }));
-    setErrors(validate(fields));
+    setErrors(validate(fields, t.errors));
   };
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const v = validate(fields);
+    const v = validate(fields, t.errors);
     setErrors(v);
     setTouched({ name: true, phone: true, date: true, time: true });
     const firstInvalid = (Object.keys(v) as (keyof Fields)[])[0];
@@ -119,19 +142,18 @@ export function AppointmentForm() {
             <span className="flex h-16 w-16 items-center justify-center rounded-full bg-teal-50 text-teal-600 ring-8 ring-teal-50/60">
               <CircleCheckBig className="h-8 w-8" aria-hidden />
             </span>
-            <h3 className="mt-6 font-display text-2xl font-semibold text-navy-900">Request received</h3>
+            <h3 className="mt-6 font-display text-2xl font-semibold text-navy-900">{t.successTitle}</h3>
             <p className="mt-3 max-w-sm text-sm leading-relaxed text-navy-600">
-              Thank you, <span className="font-semibold text-navy-900">{submitted.name}</span>. Your appointment
-              request for <span className="font-semibold text-navy-900">{formatDate(submitted.date)}</span>,{" "}
-              {submitted.time}, has been noted.
+              <Rich
+                template={t.successBody}
+                values={{ name: submitted.name, date: formatDate(submitted.date, dateLocale), time: submitted.time }}
+              />
             </p>
             <p className="mt-4 max-w-sm rounded-2xl bg-mist px-4 py-3 text-xs leading-relaxed text-navy-600">
-              <strong className="text-navy-800">Please note:</strong> this is a request only and your appointment is
-              <strong className="text-navy-800"> not yet confirmed</strong>. Confirmation is subject to availability —
-              please contact the chamber to confirm your visit.
+              <strong className="text-navy-800">{t.noteLabel}</strong> <Rich template={t.note} values={{ nc: t.notConfirmed }} />
             </p>
             <button type="button" onClick={() => setSubmitted(null)} className={buttonClasses("secondary", "mt-6")}>
-              Make another request
+              {t.another}
             </button>
           </motion.div>
         ) : (
@@ -145,14 +167,14 @@ export function AppointmentForm() {
             aria-labelledby={`${uid}-title`}
           >
             <h3 id={`${uid}-title`} className="font-display text-2xl font-semibold text-navy-900">
-              Request an appointment
+              {t.title}
             </h3>
-            <p className="mt-1.5 text-sm text-navy-500">All fields are required.</p>
+            <p className="mt-1.5 text-sm text-navy-500">{t.allRequired}</p>
 
             <div className="mt-6 grid gap-5 sm:grid-cols-2">
               <div className="sm:col-span-2">
                 <label htmlFor={id("name")} className="mb-1.5 block text-sm font-semibold text-navy-800">
-                  Patient Name
+                  {t.name}
                 </label>
                 <div className="relative">
                   <UserRound className="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-navy-400" aria-hidden />
@@ -161,7 +183,7 @@ export function AppointmentForm() {
                     name="name"
                     type="text"
                     autoComplete="name"
-                    placeholder="Full name"
+                    placeholder={t.namePlaceholder}
                     value={fields.name}
                     onChange={(e) => update("name", e.target.value)}
                     onBlur={() => blur("name")}
@@ -176,7 +198,7 @@ export function AppointmentForm() {
 
               <div className="sm:col-span-2">
                 <label htmlFor={id("phone")} className="mb-1.5 block text-sm font-semibold text-navy-800">
-                  Phone Number
+                  {t.phone}
                 </label>
                 <div className="relative">
                   <Phone className="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-navy-400" aria-hidden />
@@ -201,7 +223,7 @@ export function AppointmentForm() {
 
               <div>
                 <label htmlFor={id("date")} className="mb-1.5 block text-sm font-semibold text-navy-800">
-                  Preferred Date
+                  {t.date}
                 </label>
                 <div className="relative">
                   <CalendarDays className="pointer-events-none absolute top-1/2 left-4 z-10 h-4 w-4 -translate-y-1/2 text-navy-400" aria-hidden />
@@ -223,7 +245,7 @@ export function AppointmentForm() {
 
               <div>
                 <label htmlFor={id("time")} className="mb-1.5 block text-sm font-semibold text-navy-800">
-                  Preferred Time
+                  {t.time}
                 </label>
                 <div className="relative">
                   <Clock3 className="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-navy-400" aria-hidden />
@@ -238,11 +260,11 @@ export function AppointmentForm() {
                     className={`${fieldClass("time")} min-h-[3.25rem] appearance-none ${fields.time ? "" : "!text-navy-300"}`}
                   >
                     <option value="" disabled>
-                      Select a time
+                      {t.selectTime}
                     </option>
-                    {timeSlots.map((t) => (
-                      <option key={t} value={t} className="text-navy-900">
-                        {t}
+                    {t.timeSlots.map((slot) => (
+                      <option key={slot} value={slot} className="text-navy-900">
+                        {slot}
                       </option>
                     ))}
                   </select>
@@ -255,18 +277,17 @@ export function AppointmentForm() {
               {submitting ? (
                 <>
                   <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden />
-                  Sending request…
+                  {t.sending}
                 </>
               ) : (
                 <>
-                  Submit Request
+                  {t.submit}
                   <Send className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
                 </>
               )}
             </button>
             <p className="mt-4 text-center text-xs leading-relaxed text-navy-400">
-              Submitting this form sends a request only — it does not confirm an appointment. For medical
-              emergencies, contact your local emergency services immediately.
+              {t.disclaimer}
             </p>
           </motion.form>
         )}
@@ -275,9 +296,9 @@ export function AppointmentForm() {
   );
 }
 
-function formatDate(iso: string) {
+function formatDate(iso: string, locale: string) {
   const [y, m, d] = iso.split("-").map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString(undefined, {
+  return new Date(y, m - 1, d).toLocaleDateString(locale, {
     weekday: "short",
     day: "numeric",
     month: "long",

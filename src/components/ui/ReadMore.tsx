@@ -6,7 +6,13 @@ import { useId, useState } from "react";
 import { buttonClasses } from "./Button";
 
 /** Accessible disclosure: reveals additional content below a "Read More" button. */
-export function ReadMore({ children }: { children: React.ReactNode }) {
+export function ReadMore({
+  children,
+  labels = { more: "Read More", less: "Show Less" },
+}: {
+  children: React.ReactNode;
+  labels?: { more: string; less: string };
+}) {
   const [open, setOpen] = useState(false);
   const id = useId();
   return (
@@ -33,7 +39,7 @@ export function ReadMore({ children }: { children: React.ReactNode }) {
         onClick={() => setOpen((v) => !v)}
         className={buttonClasses("secondary")}
       >
-        {open ? "Show Less" : "Read More"}
+        {open ? labels.less : labels.more}
         <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${open ? "rotate-180" : ""}`} aria-hidden />
       </button>
     </div>

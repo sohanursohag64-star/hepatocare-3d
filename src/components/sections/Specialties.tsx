@@ -1,49 +1,13 @@
 import { Activity, ArrowUpRight, Droplets, FlaskConical, Microscope, ShieldPlus, SunMedium, type LucideIcon } from "lucide-react";
+import { fill, type Dict } from "@/i18n/dictionaries";
 import { RevealItem } from "../ui/Reveal";
 import { SectionHeading } from "../ui/SectionHeading";
 
-type Specialty = { title: string; description: string; icon: LucideIcon };
+/** Icons, in the same order as the specialties in the dictionary. */
+const icons: LucideIcon[] = [Droplets, ShieldPlus, Microscope, SunMedium, FlaskConical, Activity];
 
-const specialties: Specialty[] = [
-  {
-    title: "Fatty Liver Disease",
-    description:
-      "Assessment and ongoing follow-up for fat accumulation in the liver, including review of risk factors and test results.",
-    icon: Droplets,
-  },
-  {
-    title: "Hepatitis B & C",
-    description:
-      "Specialist evaluation, monitoring and long-term care planning for people living with viral hepatitis.",
-    icon: ShieldPlus,
-  },
-  {
-    title: "Liver Cirrhosis",
-    description:
-      "Structured, continuous care for advanced liver scarring, with regular review and coordinated follow-up.",
-    icon: Microscope,
-  },
-  {
-    title: "Jaundice",
-    description:
-      "Careful investigation of yellowing of the skin or eyes to help identify the underlying cause.",
-    icon: SunMedium,
-  },
-  {
-    title: "Liver Function Disorders",
-    description:
-      "Interpretation of abnormal liver function tests and a clear plan for any further evaluation needed.",
-    icon: FlaskConical,
-  },
-  {
-    title: "Other Liver Diseases",
-    description:
-      "Consultation for a wider range of liver and biliary conditions, including second-opinion reviews.",
-    icon: Activity,
-  },
-];
-
-export function Specialties() {
+export function Specialties({ t }: { t: Dict["specialties"] }) {
+  const specialties = t.items.map((item, i) => ({ ...item, icon: icons[i] }));
   return (
     <section
       id="specialties"
@@ -54,9 +18,9 @@ export function Specialties() {
       <div className="container-page relative">
         <SectionHeading
           id="specialties-title"
-          eyebrow="Areas of Specialty"
-          title="Focused expertise across the full spectrum of liver health"
-          description="Consultations are available for common and complex liver conditions, from first assessment to long-term follow-up."
+          eyebrow={t.eyebrow}
+          title={t.title}
+          description={t.description}
         />
 
         <ul className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -81,9 +45,9 @@ export function Specialties() {
                 <a
                   href="#appointment"
                   className="relative mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-teal-700 transition-colors hover:text-teal-500"
-                  aria-label={`Request a consultation for ${s.title}`}
+                  aria-label={fill(t.ctaAria, { title: s.title })}
                 >
-                  Request consultation
+                  {t.cta}
                   <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden />
                 </a>
             </RevealItem>

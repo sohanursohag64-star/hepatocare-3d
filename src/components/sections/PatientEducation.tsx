@@ -1,56 +1,25 @@
 import { ArrowRight, Clock3, Droplets, FlaskConical, ScanHeart, type LucideIcon } from "lucide-react";
+import type { Dict } from "@/i18n/dictionaries";
 import { RevealItem } from "../ui/Reveal";
 import { SectionHeading } from "../ui/SectionHeading";
 
-type Article = {
-  title: string;
-  category: string;
-  excerpt: string;
-  readTime: string;
-  icon: LucideIcon;
-  gradient: string;
-};
-
-/** Placeholder articles — full, medically reviewed content will be added in a later phase. */
-const articles: Article[] = [
-  {
-    title: "Understanding Fatty Liver Disease",
-    category: "Liver Basics",
-    excerpt:
-      "An introductory overview of what fatty liver disease is and why a specialist review can be helpful. [Placeholder article — content pending medical review.]",
-    readTime: "5 min read",
-    icon: Droplets,
-    gradient: "from-teal-400 via-teal-500 to-teal-700",
-  },
-  {
-    title: "Early Signs of Liver Problems",
-    category: "Awareness",
-    excerpt:
-      "A general guide to symptoms people sometimes notice and when it may be worth speaking to a doctor. [Placeholder article — content pending medical review.]",
-    readTime: "4 min read",
-    icon: ScanHeart,
-    gradient: "from-navy-500 via-navy-700 to-navy-900",
-  },
-  {
-    title: "Importance of Liver Function Tests",
-    category: "Diagnostics",
-    excerpt:
-      "What liver function tests are, and why results are best interpreted together with a clinician. [Placeholder article — content pending medical review.]",
-    readTime: "6 min read",
-    icon: FlaskConical,
-    gradient: "from-teal-600 via-navy-700 to-navy-950",
-  },
+/** Visual styling per article, in the same order as the dictionary articles. */
+const visuals: { icon: LucideIcon; gradient: string }[] = [
+  { icon: Droplets, gradient: "from-teal-400 via-teal-500 to-teal-700" },
+  { icon: ScanHeart, gradient: "from-navy-500 via-navy-700 to-navy-900" },
+  { icon: FlaskConical, gradient: "from-teal-600 via-navy-700 to-navy-950" },
 ];
 
-export function PatientEducation() {
+export function PatientEducation({ t }: { t: Dict["education"] }) {
+  const articles = t.articles.map((a, i) => ({ ...a, ...visuals[i] }));
   return (
     <section id="education" aria-labelledby="education-title" className="bg-white py-20 sm:py-28">
       <div className="container-page">
         <SectionHeading
           id="education-title"
-          eyebrow="Patient Education"
-          title="Understand your liver, with confidence"
-          description="Clear, accessible reading to help you prepare for your consultation. These resources are for general information and do not replace medical advice."
+          eyebrow={t.eyebrow}
+          title={t.title}
+          description={t.description}
         />
 
         <ul className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -88,7 +57,7 @@ export function PatientEducation() {
                   </h3>
                   <p className="mt-3 flex-1 text-sm leading-relaxed text-navy-600">{a.excerpt}</p>
                   <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-teal-700">
-                    Article coming soon
+                    {t.comingSoon}
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
                   </span>
                 </div>
