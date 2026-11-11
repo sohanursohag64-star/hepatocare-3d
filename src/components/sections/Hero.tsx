@@ -1,9 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { ArrowRight, CalendarCheck, HeartPulse, ShieldCheck, Stethoscope } from "lucide-react";
 import { doctor } from "@/lib/site";
-import { LiverIllustration } from "../LiverIllustration";
+import { Liver3D } from "../three/Liver3D";
 import { ButtonLink } from "../ui/Button";
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -14,6 +15,8 @@ const fadeUp = {
 };
 
 export function Hero() {
+  // Hide the floating chips while a 3D hotspot description is open, so they never cover it.
+  const [hotspotOpen, setHotspotOpen] = useState(false);
   return (
     <section
       id="home"
@@ -130,18 +133,12 @@ export function Hero() {
           </div>
           <div className="absolute inset-[18%] rounded-full bg-teal-300/25 blur-2xl" aria-hidden />
 
-          {/* Floating organ */}
-          <motion.div
-            className="absolute inset-[6%] flex items-center justify-center"
-            animate={{ y: [0, -14, 0], rotate: [0, 1.2, 0] }}
-            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <LiverIllustration className="h-auto w-full drop-shadow-[0_30px_40px_rgba(13,24,56,0.25)]" />
-          </motion.div>
+          {/* Organ: SVG first, upgraded to interactive 3D on capable devices */}
+          <Liver3D onHotspotChange={setHotspotOpen} />
 
           {/* Floating info chips */}
           <motion.div
-            className="absolute top-[8%] -left-2 flex items-center gap-2.5 rounded-2xl border border-white bg-white/90 px-3.5 py-2.5 shadow-lift backdrop-blur sm:-left-6"
+            className={`absolute top-[8%] -left-2 z-10 transition-opacity duration-300 ${hotspotOpen ? "pointer-events-none opacity-0" : ""} flex items-center gap-2.5 rounded-2xl border border-white bg-white/90 px-3.5 py-2.5 shadow-lift backdrop-blur sm:-left-6`}
             animate={{ y: [0, 8, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
           >
@@ -155,7 +152,7 @@ export function Hero() {
           </motion.div>
 
           <motion.div
-            className="absolute -right-2 bottom-[10%] flex items-center gap-2.5 rounded-2xl border border-white bg-white/90 px-3.5 py-2.5 shadow-lift backdrop-blur sm:-right-4"
+            className={`absolute -right-2 bottom-[10%] z-10 transition-opacity duration-300 ${hotspotOpen ? "pointer-events-none opacity-0" : ""} flex items-center gap-2.5 rounded-2xl border border-white bg-white/90 px-3.5 py-2.5 shadow-lift backdrop-blur sm:-right-4`}
             animate={{ y: [0, -10, 0] }}
             transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
           >
