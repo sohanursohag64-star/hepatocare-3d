@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useMotionValue, useTransform, type MotionValue } from "framer-motion";
-import type { ComponentType, SVGProps } from "react";
+import { motion, useMotionValue, useMotionValueEvent, useTransform, type MotionValue } from "framer-motion";
+import { useLayoutEffect, useRef, type ComponentType, type ReactNode, type SVGProps } from "react";
 
 /* -------------------------------------------------------------------------- */
 /* Timing helpers                                                             */
@@ -21,6 +21,19 @@ export const window4 = (t: number, a: number, b: number, c: number, d: number) =
 /** A motion value that never changes (handy default for optional props). */
 export function useConst(v: number) {
   return useMotionValue(v);
+}
+
+/**
+ * Rotates its children around a fixed point (cx, cy). Unlike CSS transform
+ * origins on SVG, the pivot does not move when the children change shape —
+ * needed for jointed limbs.
+ */
+export function Pivot({ angle, cx, cy, children }: { angle: MotionValue<number>; cx: number; cy: number; children: ReactNode }) {
+  const ref = useRef<SVGGElement>(null);
+  const apply = (v: number) => ref.current?.setAttribute("transform", `rotate(${v.toFixed(2)} ${cx} ${cy})`);
+  useLayoutEffect(() => apply(angle.get()));
+  useMotionValueEvent(angle, "change", apply);
+  return <g ref={ref}>{children}</g>;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -64,7 +77,7 @@ export type PersonProps = {
   walk?: MotionValue<number>;
   /** 0 worried … 1 happy. */
   mood?: MotionValue<number>;
-  /** Seated pose 0…1: legs swing forward and the hips lower. */
+  /** Seated pose 0…1: thighs level, shins down, hips lowered onto a seat. */
   seat?: MotionValue<number>;
   /** Raise the front arm 0…1 (wave / point / hand over). */
   arm?: MotionValue<number>;
@@ -104,9 +117,12 @@ export function Person({
   const st = seat ?? zero;
 
   const swing = useTransform([clk, w] as MotionValue<number>[], ([c, k]: number[]) => Math.sin(c * 9) * 24 * k);
-  const legA = useTransform([swing, st] as MotionValue<number>[], ([v, s]: number[]) => v * (1 - s) - 82 * s);
-  const legB = useTransform([swing, st] as MotionValue<number>[], ([v, s]: number[]) => -v * (1 - s) - 78 * s);
-  const seatDrop = useTransform(st, (s) => 30 * s);
+  // Thigh swings from the hip; the knee bends on the back-swing and folds 90° when seated.
+  const thighA = useTransform([swing, st] as MotionValue<number>[], ([v, s]: number[]) => v * (1 - s) - 90 * s);
+  const thighB = useTransform([swing, st] as MotionValue<number>[], ([v, s]: number[]) => -v * (1 - s) - 88 * s);
+  const shinA = useTransform([clk, w, st] as MotionValue<number>[], ([c, k, s]: number[]) => Math.max(0, -Math.sin(c * 9)) * 30 * k * (1 - s) + 90 * s);
+  const shinB = useTransform([clk, w, st] as MotionValue<number>[], ([c, k, s]: number[]) => Math.max(0, Math.sin(c * 9)) * 30 * k * (1 - s) + 88 * s);
+  const seatDrop = useTransform(st, (s) => 26 * s);
   const shadowOpacity = useTransform(st, (s) => 0.12 * (1 - s));
   const bob = useTransform([clk, w] as MotionValue<number>[], ([c, k]: number[]) => -Math.abs(Math.sin(c * 9)) * 3 * k);
   const backArm = useTransform(swing, (v) => v * 0.7);
@@ -137,14 +153,18 @@ export function Person({
           </motion.g>
 
           {/* legs */}
-          <motion.g style={{ rotate: legB, originX: "50%", originY: "0%" }}>
-            <rect x="-14" y="-54" width="13" height="52" rx="6" fill={L.pants} />
-            <ellipse cx="-5" cy="-2" rx="10" ry="5" fill={L.shoes} />
-          </motion.g>
-          <motion.g style={{ rotate: legA, originX: "50%", originY: "0%" }}>
-            <rect x="1" y="-54" width="13" height="52" rx="6" fill={L.pants} />
-            <ellipse cx="10" cy="-2" rx="10" ry="5" fill={L.shoes} />
-          </motion.g>
+          {[
+            { hx: -7.5, thigh: thighB, shin: shinB },
+            { hx: 7.5, thigh: thighA, shin: shinA },
+          ].map(({ hx, thigh, shin }) => (
+            <Pivot key={hx} angle={thigh} cx={hx} cy={-50}>
+              <rect x={hx - 6.5} y="-56" width="13" height="30" rx="6.5" fill={L.pants} />
+              <Pivot angle={shin} cx={hx} cy={-29}>
+                <rect x={hx - 6.5} y="-33" width="13" height="31" rx="6" fill={L.pants} />
+                <ellipse cx={hx + 3} cy="-2" rx="10" ry="5" fill={L.shoes} />
+              </Pivot>
+            </Pivot>
+          ))}
 
           {/* body */}
           {variant === "doctor" ? (
@@ -248,22 +268,63 @@ export function Person({
 /* Car                                                                        */
 /* -------------------------------------------------------------------------- */
 
-export function Car({ x, opacity }: { x: MotionValue<number>; opacity?: MotionValue<number> }) {
-  const wheel = useTransform(x, (v) => (v / (2 * Math.PI * 22)) * 360);
+/** Cars are drawn at this scale so people and car read at realistic proportions. */
+export const CAR_SCALE = 1.3;
+/** Scene-space x offset from the car origin to the middle of the driver's door. */
+export const CAR_DOOR_X = 160 * CAR_SCALE;
+
+export function Car({
+  x,
+  opacity,
+  occupant,
+  door,
+}: {
+  x: MotionValue<number>;
+  opacity?: MotionValue<number>;
+  /** Visibility 0…1 of the patient seated behind the front window. */
+  occupant?: MotionValue<number>;
+  /** Driver's door 0 closed … 1 open (hinged at its front edge). */
+  door?: MotionValue<number>;
+}) {
+  const wheel = useTransform(x, (v) => (v / (2 * Math.PI * 22 * CAR_SCALE)) * 360);
   const one = useConst(1);
+  const zero = useConst(0);
+  const d = door ?? zero;
+  const doorScale = useTransform(d, (v) => 1 - 0.78 * v);
+  const doorShade = useTransform(d, (v) => v * 0.25);
+  const P = LOOK.patient;
   return (
     <motion.g style={{ x, opacity: opacity ?? one }}>
+      <g transform={`scale(${CAR_SCALE})`}>
       <ellipse cx="115" cy="2" rx="120" ry="7" fill={C.navy} opacity="0.15" />
       <path d="M44 -78 L74 -114 Q 80 -120 90 -120 H158 Q 168 -120 174 -112 L200 -78 Z" fill="#5b7cff" />
       <path d="M84 -80 L100 -110 H130 V-80 Z" fill="#dff1ff" />
       <path d="M137 -80 V-110 H160 L182 -80 Z" fill="#dff1ff" />
+      {/* seated patient, seen through the front window */}
+      <motion.g style={{ opacity: occupant ?? zero }}>
+        <rect x="142" y="-90" width="28" height="14" rx="6" fill={P.shirt} />
+        <circle cx="156" cy="-100" r="12" fill={P.skin} />
+        <path d="M144 -103 C 144 -116, 168 -117, 168 -104 C 162 -110, 152 -111, 146 -106 Z" fill={P.hair} />
+        <circle cx="162" cy="-101" r="1.8" fill={C.navy} />
+        <path d="M160 -95 Q 164 -92 167 -95" fill="none" stroke={C.navy} strokeWidth="1.4" strokeLinecap="round" />
+      </motion.g>
+      {/* window glare */}
+      <path d="M141 -84 L152 -108 H158 L147 -84 Z" fill="#ffffff" opacity="0.45" />
       <rect x="0" y="-82" width="232" height="54" rx="20" fill="#5b7cff" />
       <rect x="0" y="-60" width="232" height="6" fill="#4a68e0" />
-      <path d="M134 -78 V-34" stroke="#4a68e0" strokeWidth="2" />
-      <rect x="120" y="-66" width="12" height="4" rx="2" fill="#dff1ff" />
+      {/* door opening (visible when the door swings open) */}
+      <rect x="134" y="-80" width="52" height="46" rx="4" fill="#2a3a8c" />
+      <rect x="138" y="-56" width="44" height="10" rx="3" fill="#3d4fb0" />
+      {/* driver's door, hinged at the front edge */}
+      <motion.g style={{ scaleX: doorScale, originX: "100%", originY: "50%" }}>
+        <rect x="134" y="-82" width="52" height="50" rx="5" fill="#5b7cff" stroke="#4a68e0" strokeWidth="2" />
+        <rect x="134" y="-60" width="52" height="6" fill="#4a68e0" />
+        <rect x="142" y="-70" width="12" height="4" rx="2" fill="#dff1ff" />
+        <motion.rect x="134" y="-82" width="52" height="50" rx="5" fill="#000000" style={{ opacity: doorShade }} />
+      </motion.g>
       <circle cx="224" cy="-62" r="6" fill="#ffe08a" />
       <rect x="2" y="-66" width="8" height="10" rx="3" fill="#ff8a7a" />
-      {[56, 176].map((cx) => (
+      {[56, 190].map((cx) => (
         <g key={cx} transform={`translate(${cx} -26)`}>
           <circle r="23" fill={C.navy} />
           <motion.g style={{ rotate: wheel }}>
@@ -272,6 +333,7 @@ export function Car({ x, opacity }: { x: MotionValue<number>; opacity?: MotionVa
           </motion.g>
         </g>
       ))}
+      </g>
     </motion.g>
   );
 }

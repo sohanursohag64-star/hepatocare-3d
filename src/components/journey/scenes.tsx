@@ -2,7 +2,7 @@
 
 import { motion, useMotionValue, useTransform, type MotionValue } from "framer-motion";
 import { ClipboardCheck, FileText, HeartPulse, Smile } from "lucide-react";
-import { Bubble, C, Car, easeIn, easeInOut, easeOut, Exterior, lerp, Person, seg, window4 } from "./parts";
+import { Bubble, C, Car, CAR_DOOR_X, easeIn, easeInOut, easeOut, Exterior, lerp, Person, seg, window4 } from "./parts";
 
 /** Scene lengths in seconds. Scene i starts at SCENE_START[i]. */
 export const SCENE_LENGTH = [7, 5.6, 8.4, 6.6];
@@ -11,8 +11,12 @@ export const LOOP_LENGTH = SCENE_LENGTH.reduce((a, b) => a + b, 0);
 /** A representative still frame for each scene (used when motion is reduced). */
 export const SCENE_STILL = [5.0, 2.8, 6.9, 2.0].map((t, i) => SCENE_START[i] + t);
 
-const ROAD_Y = 432;
+const ROAD_Y = 436;
 const WALK_Y = 380;
+/** Where the parked car stops, and the spot just in front of its open door. */
+const PARK_X = 60;
+const DOOR_X = PARK_X + CAR_DOOR_X;
+const KERB_Y = 402;
 
 type SceneProps = { clk: MotionValue<number>; lt: MotionValue<number>; labels: SceneLabels };
 export type SceneLabels = { clinicDoor: string; doctorDoor: string; reception: string };
@@ -24,18 +28,24 @@ function useLocal(clk: MotionValue<number>, index: number) {
 
 /* 1 · Arrival --------------------------------------------------------------- */
 function Arrival({ clk, lt, labels }: SceneProps) {
-  const carX = useTransform(lt, (s) => lerp(-340, 120, easeOut(seg(s, 0, 2.4))));
-  const pOpacity = useTransform(lt, (s) => window4(s, 2.7, 3.0, 5.9, 6.4));
-  const pX = useTransform(lt, (s) => lerp(330, 655, easeInOut(seg(s, 3.1, 5.7))));
-  const pWalk = useTransform(lt, (s) => window4(s, 3.0, 3.3, 5.5, 5.8));
-  const door = useTransform(lt, (s) => window4(s, 5.0, 5.5, 6.4, 6.9));
+  const carX = useTransform(lt, (s) => lerp(-400, PARK_X, easeOut(seg(s, 0, 2.3))));
+  // Door opens, the patient steps out of the open door (the seated figure swaps out
+  // in a blink, hidden by the door), the door closes, then the walk to the chamber.
+  const carDoor = useTransform(lt, (s) => window4(s, 2.4, 2.8, 3.5, 3.9));
+  const occupant = useTransform(lt, (s) => 1 - seg(s, 2.82, 2.92));
+  const pOpacity = useTransform(lt, (s) => window4(s, 2.82, 2.92, 6.0, 6.4));
+  const pX = useTransform(lt, (s) =>
+    s < 3.3 ? lerp(DOOR_X - 8, DOOR_X + 22, easeOut(seg(s, 2.85, 3.25))) : lerp(DOOR_X + 22, 655, easeInOut(seg(s, 3.4, 5.8))),
+  );
+  const pY = useTransform(lt, (s) => (s < 3.3 ? lerp(KERB_Y - 10, KERB_Y, easeOut(seg(s, 2.85, 3.25))) : lerp(KERB_Y, WALK_Y, seg(s, 3.4, 4.4))));
+  const pWalk = useTransform(lt, (s) => window4(s, 3.3, 3.6, 5.6, 5.9));
+  const door = useTransform(lt, (s) => window4(s, 5.1, 5.6, 6.4, 6.9));
   const mood = useMotionValue(0.15);
-  const pY = useMotionValue(WALK_Y);
   return (
     <>
       <Exterior clk={clk} door={door} doorSign={labels.clinicDoor} />
       <g transform={`translate(0 ${ROAD_Y})`}>
-        <Car x={carX} />
+        <Car x={carX} occupant={occupant} door={carDoor} />
       </g>
       <Person variant="patient" clk={clk} x={pX} y={pY} opacity={pOpacity} walk={pWalk} mood={mood} holding="folder" scale={1} />
     </>
@@ -155,8 +165,11 @@ function Consultation({ clk, lt }: SceneProps) {
       <rect x="600" y="240" width="64" height="46" rx="6" fill={C.navy} />
       <rect x="626" y="286" width="12" height="8" fill={C.navy} />
       <path d="M612 268 C 614 256, 628 252, 640 252 C 650 252, 655 256, 657 260 C 649 262, 643 266, 638 272 C 632 278, 622 280, 616 277 C 613 275, 612 272, 612 268 Z" fill={C.teal} />
-      {/* patient chair back */}
-      <rect x="248" y="290" width="14" height="90" rx="6" fill={C.teal} />
+      {/* patient chair: back + seat (thighs rest on the seat, shins reach the floor) */}
+      <rect x="262" y="282" width="12" height="74" rx="6" fill={C.tealDark} />
+      <rect x="262" y="350" width="62" height="10" rx="5" fill={C.teal} />
+      <rect x="268" y="360" width="5" height="20" fill={C.navyMid} />
+      <rect x="314" y="360" width="5" height="20" fill={C.navyMid} />
       <Person
         variant="patient"
         clk={clk}
@@ -170,10 +183,6 @@ function Consultation({ clk, lt }: SceneProps) {
         scale={1}
       />
       <Person variant="patient" clk={clk} x={seatedX} y={seatedY} opacity={pPaper} mood={mood} seat={seated} holding="paper" scale={1} />
-      {/* chair seat (covers legs while seated) */}
-      <rect x="252" y="350" width="70" height="12" rx="5" fill={C.teal} />
-      <rect x="258" y="362" width="6" height="18" fill={C.navyMid} />
-      <rect x="310" y="362" width="6" height="18" fill={C.navyMid} />
       {/* plan handed over */}
       <motion.g style={{ x: paperX, y: paperY, opacity: paperOpacity }}>
         <rect x="-10" y="-13" width="20" height="26" rx="2" fill="#ffffff" stroke={C.line} />
@@ -189,20 +198,24 @@ function Consultation({ clk, lt }: SceneProps) {
 /* 4 · Leaving --------------------------------------------------------------- */
 function Leaving({ clk, lt, labels }: SceneProps) {
   const door = useTransform(lt, (s) => window4(s, 0, 0.5, 1.5, 2.0));
-  const pOpacity = useTransform(lt, (s) => window4(s, 0.2, 0.6, 3.5, 3.9));
-  const pX = useTransform(lt, (s) => lerp(655, 300, easeInOut(seg(s, 0.8, 3.3))));
-  const pWalk = useTransform(lt, (s) => window4(s, 0.7, 1.0, 3.1, 3.4));
-  const carX = useTransform(lt, (s) => lerp(120, 900, easeIn(seg(s, 4.0, 6.3))));
+  const pOpacity = useTransform(lt, (s) => window4(s, 0.2, 0.6, 3.82, 3.92));
+  const pX = useTransform(lt, (s) =>
+    s < 3.4 ? lerp(655, DOOR_X + 22, easeInOut(seg(s, 0.8, 3.2))) : lerp(DOOR_X + 22, DOOR_X - 8, easeIn(seg(s, 3.5, 3.88))),
+  );
+  const pY = useTransform(lt, (s) => (s < 3.4 ? lerp(WALK_Y, KERB_Y, seg(s, 2.2, 3.2)) : lerp(KERB_Y, KERB_Y - 10, easeIn(seg(s, 3.5, 3.88)))));
+  const pWalk = useTransform(lt, (s) => window4(s, 0.7, 1.0, 3.0, 3.3));
+  const carDoor = useTransform(lt, (s) => window4(s, 3.1, 3.5, 4.0, 4.4));
+  const occupant = useTransform(lt, (s) => seg(s, 3.82, 3.92));
+  const carX = useTransform(lt, (s) => lerp(PARK_X, 960, easeIn(seg(s, 4.5, 6.4))));
   const sparkle = useTransform(lt, (s) => window4(s, 1.0, 1.4, 3.0, 3.4));
   const sparkleY = useTransform(lt, (s) => -((s * 18) % 40));
   const mood = useMotionValue(1);
-  const pY = useMotionValue(WALK_Y);
   const heartsX = useTransform(pX, (v) => v - 10);
   return (
     <>
       <Exterior clk={clk} door={door} doorSign={labels.clinicDoor} />
       <g transform={`translate(0 ${ROAD_Y})`}>
-        <Car x={carX} />
+        <Car x={carX} occupant={occupant} door={carDoor} />
       </g>
       <Person variant="patient" clk={clk} x={pX} y={pY} opacity={pOpacity} walk={pWalk} mood={mood} holding="paper" flip scale={1} />
       <motion.g style={{ x: heartsX, opacity: sparkle }}>
