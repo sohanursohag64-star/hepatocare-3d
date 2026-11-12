@@ -3,7 +3,7 @@
  *
  * Text that appears on the page (names, addresses, hours…) lives in
  * src/i18n/dictionaries.ts so it can be shown in English and Bangla.
- * Everything here is a PLACEHOLDER until verified details are provided.
+ * Details provided by the site owner.
  */
 
 export const site = {
@@ -13,14 +13,24 @@ export const site = {
 };
 
 export const contact = {
-  phone: "+00 0000 000 000",
-  phoneHref: "tel:+000000000000",
-  email: "appointments@example.com",
+  phone: "+880 1770-951986",
+  phoneHref: "tel:+8801770951986",
+  email: "sohanurnil24@gmail.com",
   /**
    * WhatsApp number in international format, digits only (e.g. "8801XXXXXXXXX").
    * Leave empty to hide the floating WhatsApp button.
    */
   whatsapp: "",
+};
+
+/** Chamber schedule (used by the appointment form and search-engine data). */
+export const schedule = {
+  /** Days the chamber is closed, as JavaScript weekday numbers (0 = Sunday … 4 = Thursday). */
+  closedWeekdays: [4],
+  opens: "16:00",
+  closes: "21:00",
+  city: "Bogura",
+  country: "BD",
 };
 
 export const media = {
@@ -29,6 +39,8 @@ export const media = {
    * Leave empty to show the illustrated placeholder.
    */
   doctorPhoto: "",
+  /** Square face crop used for small avatars. */
+  doctorAvatar: "",
   /**
    * Google Maps "Embed a map" URL (Share → Embed a map → copy the src="…" value).
    * Leave empty to show the illustrated map placeholder.

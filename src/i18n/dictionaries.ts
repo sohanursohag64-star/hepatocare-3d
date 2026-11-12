@@ -1,9 +1,9 @@
 /**
  * All user-facing copy, in English and Bangla.
  *
- * Doctor, chamber and contact details are PLACEHOLDERS (in [brackets]).
- * Replace them in BOTH languages with verified information before
- * publishing. Never add credentials or affiliations that are not confirmed.
+ * Doctor, chamber and contact details were provided by the site owner.
+ * Keep English and Bangla in sync, and never add credentials or
+ * affiliations that have not been confirmed.
  *
  * Strings may contain {tokens}; components fill them in with `fill()`.
  */
@@ -20,10 +20,10 @@ const en = {
   numberLocale: "en-GB",
 
   meta: {
-    title: "HepatoCare – Specialist Hepatologist | Expert Liver Care",
+    title: "Dr. Md Sohanur Rahman – Hepatologist in Bogura | HepatoCare",
     description:
-      "HepatoCare is the personal practice website of a Specialist Hepatologist offering expert, personalized consultation for liver health.",
-    ogTitle: "HepatoCare – Specialist Liver Care",
+      "HepatoCare is the practice website of Dr. Md Sohanur Rahman, MBBS, MD (Hepatology), Associate Professor with 20+ years of experience — consultations for liver conditions at X Diagnostic Centre, Bogura.",
+    ogTitle: "Dr. Md Sohanur Rahman – Hepatologist | HepatoCare",
   },
 
   common: {
@@ -53,15 +53,15 @@ const en = {
   },
 
   doctor: {
-    name: "Dr. [Doctor Name]",
-    designation: "Consultant Hepatologist",
-    credentials: "[Degree], [Postgraduate Qualification in Hepatology]",
-    experienceYears: "[XX]+",
+    name: "Dr. Md Sohanur Rahman",
+    designation: "Associate Professor · Hepatologist",
+    credentials: "MBBS, MD (Hepatology)",
+    experienceYears: "20+",
     qualifications: [
-      { title: "[Medical Degree]", detail: "[Institution Name], [Year]" },
-      { title: "[Postgraduate Degree – Medicine / Gastroenterology]", detail: "[Institution Name], [Year]" },
-      { title: "[Fellowship / Specialist Training in Hepatology]", detail: "[Institution Name], [Year]" },
-      { title: "[Professional Membership]", detail: "[Society / Association Name]" },
+      { title: "MBBS", detail: "Bachelor of Medicine, Bachelor of Surgery" },
+      { title: "MD (Hepatology)", detail: "Doctor of Medicine in Hepatology" },
+      { title: "Associate Professor", detail: "Academic appointment" },
+      { title: "20+ years of experience", detail: "In clinical medicine and liver care" },
     ],
   },
 
@@ -92,6 +92,39 @@ const en = {
       },
       { id: "gallbladder", label: "Gallbladder", description: "A small pouch beneath the liver that stores bile." },
     ],
+  },
+
+  scope: {
+    eyebrow: "Endoscopy & Colonoscopy",
+    title: "A closer look, explained simply",
+    description:
+      "Endoscopy and colonoscopy use a thin, flexible tube with a tiny camera to look inside the digestive tract. Here is an illustrated overview of how each examination works.",
+    tabs: ["Endoscopy", "Colonoscopy"],
+    cameraView: "Camera view (illustration)",
+    play: "Play animation",
+    pause: "Pause animation",
+    sceneLabel:
+      "Animated illustration: a flexible scope with a camera travels through the esophagus, stomach and duodenum during endoscopy, and through the colon during colonoscopy.",
+    scenes: [
+      {
+        labels: ["Esophagus", "Stomach", "Duodenum"],
+        phases: [
+          { title: "A thin, flexible scope is passed through the mouth", text: "It travels gently down the food pipe (esophagus) into the stomach." },
+          { title: "The camera shows the lining on a screen", text: "The doctor can look at the esophagus, the stomach and the first part of the small intestine." },
+          { title: "The scope is gently withdrawn", text: "Afterwards, the doctor explains what was seen and what happens next." },
+        ],
+      },
+      {
+        labels: ["Rectum", "Colon", "Cecum"],
+        phases: [
+          { title: "A flexible scope is guided through the large intestine", text: "It moves slowly along the colon, from the rectum towards the cecum." },
+          { title: "The camera shows the lining of the colon", text: "The doctor examines the bowel wall on a screen." },
+          { title: "The scope is gently withdrawn", text: "The lining is viewed again on the way out, and the findings are explained afterwards." },
+        ],
+      },
+    ],
+    note: "Illustrative animation, not a medical image. Whether an examination is needed, and how to prepare for it, is decided together with your doctor.",
+    cta: "Ask about these examinations",
   },
 
   story: {
@@ -137,7 +170,7 @@ const en = {
     titleEm: "every liver",
     titleAfter: ".",
     intro:
-      "{name} is a consultant hepatologist focused on the diagnosis and long-term management of liver conditions. [Add a short professional introduction here — clinical interests, current role and approach to patient care.]",
+      "{name} (MBBS, MD in Hepatology) is an Associate Professor and hepatologist with more than 20 years of experience. The practice focuses on the diagnosis and long-term management of liver conditions, with unhurried consultations and clear explanations.",
     portraitPlaceholder: "Portrait placeholder",
     portraitAlt: "Portrait of {name}",
     yearsOf: "Years of",
@@ -150,10 +183,8 @@ const en = {
       { value: "1:1", label: "Dedicated consultations" },
       { value: "360°", label: "Review of history & reports" },
     ],
-    more: [
-      "[Extended biography placeholder — training pathway, areas of clinical focus and the settings in which the doctor practises. Replace with verified information.]",
-      "[Optional: academic interests, teaching roles, research publications or professional society involvement — include only details that have been confirmed.]",
-    ],
+    /** Extra biography paragraphs shown under "Read More" — add verified details here. */
+    more: [] as string[],
   },
 
   specialties: {
@@ -227,23 +258,42 @@ const en = {
         title: "Understanding Fatty Liver Disease",
         category: "Liver Basics",
         excerpt:
-          "An introductory overview of what fatty liver disease is and why a specialist review can be helpful. [Placeholder article — content pending medical review.]",
+          "An introductory overview of what fatty liver disease is and why a specialist review can be helpful.",
         readTime: "5 min read",
       },
       {
         title: "Early Signs of Liver Problems",
         category: "Awareness",
         excerpt:
-          "A general guide to symptoms people sometimes notice and when it may be worth speaking to a doctor. [Placeholder article — content pending medical review.]",
+          "A general guide to symptoms people sometimes notice and when it may be worth speaking to a doctor.",
         readTime: "4 min read",
       },
       {
         title: "Importance of Liver Function Tests",
         category: "Diagnostics",
         excerpt:
-          "What liver function tests are, and why results are best interpreted together with a clinician. [Placeholder article — content pending medical review.]",
+          "What liver function tests are, and why results are best interpreted together with a clinician.",
         readTime: "6 min read",
       },
+    ],
+  },
+
+  journey: {
+    eyebrow: "Your Visit",
+    title: "What your visit looks like",
+    description: "From arrival to heading home — a simple, friendly picture of a consultation at the chamber.",
+    play: "Play animation",
+    pause: "Pause animation",
+    goToStep: "Show step {n}: {title}",
+    sceneLabel: "Animated illustration: a patient drives to the chamber, checks in at reception, meets the doctor, and leaves reassured with a care plan.",
+    clinicDoor: "Chamber",
+    doctorDoor: "Doctor",
+    reception: "Reception",
+    steps: [
+      { title: "Arrive at the chamber", text: "Come at your confirmed time, with your previous reports and prescriptions." },
+      { title: "Quick check-in", text: "The front desk confirms your details and shows you to the doctor's room." },
+      { title: "An unhurried consultation", text: "The doctor listens, reviews your reports and explains things clearly." },
+      { title: "Leave with a clear plan", text: "Head home reassured, with written next steps you understand." },
     ],
   },
 
@@ -261,16 +311,8 @@ const en = {
         a: "Please bring any previous prescriptions, a list of the medicines you currently take, and recent test reports or imaging (for example, blood test or ultrasound reports). Keeping them together in one folder helps make the most of your visit.",
       },
       {
-        q: "Do I need a referral from another doctor?",
-        a: "[To be confirmed by the chamber: whether patients can book directly or need a referral.]",
-      },
-      {
-        q: "How long does a consultation take?",
-        a: "[Typical first-visit and follow-up durations to be confirmed by the chamber.]",
-      },
-      {
         q: "Can a family member come with me?",
-        a: "Many patients find it helpful to bring a family member or carer to listen and take notes. [Please confirm the chamber's policy.]",
+        a: "Many patients find it helpful to bring a family member or carer to listen and take notes.",
       },
       {
         q: "Is the online form a confirmed booking?",
@@ -287,11 +329,11 @@ const en = {
     eyebrow: "Chamber Information",
     title: "Visit the chamber",
     description: "Consultations are by appointment. Please call ahead or send an appointment request below.",
-    name: "[Hospital / Chamber Name]",
-    addressLines: ["[Building / Floor, Street Address]", "[Area, City, Postcode]"],
+    name: "X Diagnostic Centre",
+    addressLines: ["Bogura, Bangladesh"],
     hours: [
-      { days: "[Saturday – Thursday]", time: "[5:00 PM – 9:00 PM]" },
-      { days: "[Friday]", time: "[Closed]" },
+      { days: "Every day except Thursday", time: "4:00 PM – 9:00 PM" },
+      { days: "Thursday", time: "Closed" },
     ],
     visitingHours: "Visiting Hours",
     appointments: "Appointments",
@@ -323,7 +365,7 @@ const en = {
     date: "Preferred Date",
     time: "Preferred Time",
     selectTime: "Select a time",
-    timeSlots: ["Morning (9 AM – 12 PM)", "Afternoon (12 PM – 4 PM)", "Evening (4 PM – 8 PM)"],
+    timeSlots: ["4:00 PM – 5:30 PM", "5:30 PM – 7:00 PM", "7:00 PM – 9:00 PM"],
     submit: "Submit Request",
     sending: "Sending request…",
     disclaimer:
@@ -336,6 +378,7 @@ const en = {
       phoneInvalid: "Please enter a valid phone number (7–15 digits).",
       dateRequired: "Please choose a preferred date.",
       datePast: "Please choose today or a future date.",
+      dateClosed: "The chamber is closed on Thursdays. Please choose another day.",
       timeRequired: "Please choose a preferred time.",
     },
     successTitle: "Request received",
@@ -374,10 +417,10 @@ const bn: Dict = {
   numberLocale: "bn-BD",
 
   meta: {
-    title: "হেপাটোকেয়ার – বিশেষজ্ঞ হেপাটোলজিস্ট | লিভারের বিশেষজ্ঞ চিকিৎসা",
+    title: "ডা. মো. সোহানুর রহমান – বগুড়ায় লিভার বিশেষজ্ঞ (হেপাটোলজিস্ট) | হেপাটোকেয়ার",
     description:
-      "হেপাটোকেয়ার একজন বিশেষজ্ঞ হেপাটোলজিস্টের ব্যক্তিগত চেম্বারের ওয়েবসাইট, যেখানে লিভারের সুস্থতার জন্য দক্ষ ও ব্যক্তিভিত্তিক পরামর্শ দেওয়া হয়।",
-    ogTitle: "হেপাটোকেয়ার – বিশেষজ্ঞ লিভার চিকিৎসা",
+      "হেপাটোকেয়ার ডা. মো. সোহানুর রহমানের ওয়েবসাইট — এমবিবিএস, এমডি (হেপাটোলজি), সহযোগী অধ্যাপক, ২০+ বছরের অভিজ্ঞতা। এক্স ডায়াগনস্টিক সেন্টার, বগুড়ায় লিভারের রোগের পরামর্শ।",
+    ogTitle: "ডা. মো. সোহানুর রহমান – লিভার বিশেষজ্ঞ | হেপাটোকেয়ার",
   },
 
   common: {
@@ -407,15 +450,15 @@ const bn: Dict = {
   },
 
   doctor: {
-    name: "ডা. [ডাক্তারের নাম]",
-    designation: "কনসালট্যান্ট হেপাটোলজিস্ট",
-    credentials: "[ডিগ্রি], [হেপাটোলজিতে স্নাতকোত্তর যোগ্যতা]",
-    experienceYears: "[XX]+",
+    name: "ডা. মো. সোহানুর রহমান",
+    designation: "সহযোগী অধ্যাপক · হেপাটোলজিস্ট",
+    credentials: "এমবিবিএস, এমডি (হেপাটোলজি)",
+    experienceYears: "২০+",
     qualifications: [
-      { title: "[মেডিকেল ডিগ্রি]", detail: "[প্রতিষ্ঠানের নাম], [সাল]" },
-      { title: "[স্নাতকোত্তর ডিগ্রি – মেডিসিন / গ্যাস্ট্রোএন্টারোলজি]", detail: "[প্রতিষ্ঠানের নাম], [সাল]" },
-      { title: "[হেপাটোলজিতে ফেলোশিপ / বিশেষ প্রশিক্ষণ]", detail: "[প্রতিষ্ঠানের নাম], [সাল]" },
-      { title: "[পেশাগত সদস্যপদ]", detail: "[সোসাইটি / অ্যাসোসিয়েশনের নাম]" },
+      { title: "এমবিবিএস", detail: "ব্যাচেলর অব মেডিসিন অ্যান্ড ব্যাচেলর অব সার্জারি" },
+      { title: "এমডি (হেপাটোলজি)", detail: "হেপাটোলজিতে ডক্টর অব মেডিসিন" },
+      { title: "সহযোগী অধ্যাপক", detail: "শিক্ষকতার পদ" },
+      { title: "২০+ বছরের অভিজ্ঞতা", detail: "চিকিৎসা ও লিভার রোগের যত্নে" },
     ],
   },
 
@@ -442,6 +485,39 @@ const bn: Dict = {
       { id: "left-lobe", label: "বাম লোব", description: "ছোট লোবটি, যা পেটের উপরের অংশের বাম দিকে বিস্তৃত।" },
       { id: "gallbladder", label: "পিত্তথলি", description: "লিভারের নিচের ছোট একটি থলি, যেখানে পিত্তরস জমা থাকে।" },
     ],
+  },
+
+  scope: {
+    eyebrow: "এন্ডোস্কপি ও কোলনোস্কপি",
+    title: "ভেতরটা কাছ থেকে দেখা, সহজ ভাষায়",
+    description:
+      "এন্ডোস্কপি ও কোলনোস্কপিতে ছোট ক্যামেরাযুক্ত একটি সরু, নমনীয় নল দিয়ে পরিপাকতন্ত্রের ভেতরটা দেখা হয়। প্রতিটি পরীক্ষা কীভাবে হয়, তার একটি চিত্রিত ধারণা এখানে দেওয়া হলো।",
+    tabs: ["এন্ডোস্কপি", "কোলনোস্কপি"],
+    cameraView: "ক্যামেরার দৃশ্য (চিত্র)",
+    play: "অ্যানিমেশন চালান",
+    pause: "অ্যানিমেশন থামান",
+    sceneLabel:
+      "অ্যানিমেটেড চিত্র: ক্যামেরাযুক্ত নমনীয় নল এন্ডোস্কপিতে খাদ্যনালী, পাকস্থলী ও ডিওডেনামের ভেতর দিয়ে এবং কোলনোস্কপিতে বৃহদন্ত্রের ভেতর দিয়ে এগিয়ে যায়।",
+    scenes: [
+      {
+        labels: ["খাদ্যনালী", "পাকস্থলী", "ডিওডেনাম"],
+        phases: [
+          { title: "একটি সরু, নমনীয় নল মুখ দিয়ে প্রবেশ করানো হয়", text: "এটি ধীরে ধীরে খাদ্যনালী দিয়ে পাকস্থলীতে পৌঁছায়।" },
+          { title: "ক্যামেরা ভেতরের আবরণ পর্দায় দেখায়", text: "ডাক্তার খাদ্যনালী, পাকস্থলী ও ক্ষুদ্রান্ত্রের প্রথম অংশ দেখতে পারেন।" },
+          { title: "নলটি ধীরে ধীরে বের করে আনা হয়", text: "এরপর ডাক্তার কী দেখা গেল এবং পরবর্তী করণীয় বুঝিয়ে বলেন।" },
+        ],
+      },
+      {
+        labels: ["মলাশয়", "কোলন", "সিকাম"],
+        phases: [
+          { title: "একটি নমনীয় নল বৃহদন্ত্রের ভেতর দিয়ে এগিয়ে নেওয়া হয়", text: "এটি মলাশয় থেকে সিকামের দিকে কোলন বরাবর ধীরে ধীরে এগোয়।" },
+          { title: "ক্যামেরা কোলনের ভেতরের আবরণ দেখায়", text: "ডাক্তার পর্দায় অন্ত্রের দেয়াল পরীক্ষা করেন।" },
+          { title: "নলটি ধীরে ধীরে বের করে আনা হয়", text: "বের করার সময় আবরণ আবার দেখা হয়, এবং পরে ফলাফল বুঝিয়ে বলা হয়।" },
+        ],
+      },
+    ],
+    note: "এটি শিক্ষামূলক অ্যানিমেশন, চিকিৎসার ছবি নয়। পরীক্ষা প্রয়োজন কিনা এবং কীভাবে প্রস্তুতি নিতে হবে, তা আপনার ডাক্তারের সঙ্গে আলোচনা করে ঠিক করা হয়।",
+    cta: "এই পরীক্ষাগুলো সম্পর্কে জানুন",
   },
 
   story: {
@@ -487,7 +563,7 @@ const bn: Dict = {
     titleEm: "যত্নশীল বিশেষজ্ঞ",
     titleAfter: " চিকিৎসা।",
     intro:
-      "{name} একজন কনসালট্যান্ট হেপাটোলজিস্ট, যিনি লিভারের রোগ নির্ণয় ও দীর্ঘমেয়াদি ব্যবস্থাপনায় কাজ করেন। [এখানে একটি সংক্ষিপ্ত পেশাগত পরিচিতি যোগ করুন — চিকিৎসার আগ্রহের ক্ষেত্র, বর্তমান পদ ও রোগীর যত্নের দৃষ্টিভঙ্গি।]",
+      "{name} (এমবিবিএস, এমডি – হেপাটোলজি) একজন সহযোগী অধ্যাপক ও হেপাটোলজিস্ট, যাঁর ২০ বছরেরও বেশি অভিজ্ঞতা রয়েছে। লিভারের রোগ নির্ণয় ও দীর্ঘমেয়াদি চিকিৎসাই তাঁর মূল কাজের ক্ষেত্র — সময় নিয়ে পরামর্শ ও স্পষ্ট ব্যাখ্যার মাধ্যমে।",
     portraitPlaceholder: "ছবির জায়গা",
     portraitAlt: "{name}-এর ছবি",
     yearsOf: "বছরের",
@@ -500,10 +576,7 @@ const bn: Dict = {
       { value: "১:১", label: "একান্ত পরামর্শ" },
       { value: "৩৬০°", label: "ইতিহাস ও রিপোর্টের পূর্ণ পর্যালোচনা" },
     ],
-    more: [
-      "[বিস্তারিত পরিচিতির জায়গা — প্রশিক্ষণের পথ, চিকিৎসার মূল ক্ষেত্র এবং যেসব প্রতিষ্ঠানে ডাক্তার চিকিৎসা দেন। যাচাই করা তথ্য দিয়ে বদলে দিন।]",
-      "[ঐচ্ছিক: শিক্ষাগত আগ্রহ, শিক্ষকতা, গবেষণা প্রকাশনা বা পেশাগত সংগঠনে সম্পৃক্ততা — শুধু নিশ্চিত তথ্য যোগ করুন।]",
-    ],
+    more: [],
   },
 
   specialties: {
@@ -575,23 +648,42 @@ const bn: Dict = {
         title: "ফ্যাটি লিভার রোগ বোঝা",
         category: "লিভারের মৌলিক বিষয়",
         excerpt:
-          "ফ্যাটি লিভার রোগ কী, এবং কেন বিশেষজ্ঞের পর্যালোচনা সহায়ক হতে পারে — একটি প্রাথমিক ধারণা। [খসড়া লেখা — চিকিৎসকের পর্যালোচনার অপেক্ষায়।]",
+          "ফ্যাটি লিভার রোগ কী, এবং কেন বিশেষজ্ঞের পর্যালোচনা সহায়ক হতে পারে — একটি প্রাথমিক ধারণা।",
         readTime: "৫ মিনিটে পড়ুন",
       },
       {
         title: "লিভারের সমস্যার প্রাথমিক লক্ষণ",
         category: "সচেতনতা",
         excerpt:
-          "যেসব উপসর্গ মানুষ কখনো কখনো লক্ষ করেন, এবং কখন ডাক্তারের সঙ্গে কথা বলা উচিত — একটি সাধারণ নির্দেশিকা। [খসড়া লেখা — চিকিৎসকের পর্যালোচনার অপেক্ষায়।]",
+          "যেসব উপসর্গ মানুষ কখনো কখনো লক্ষ করেন, এবং কখন ডাক্তারের সঙ্গে কথা বলা উচিত — একটি সাধারণ নির্দেশিকা।",
         readTime: "৪ মিনিটে পড়ুন",
       },
       {
         title: "লিভার ফাংশন টেস্টের গুরুত্ব",
         category: "পরীক্ষা-নিরীক্ষা",
         excerpt:
-          "লিভার ফাংশন টেস্ট কী, এবং কেন এর ফলাফল চিকিৎসকের সঙ্গে মিলিয়ে দেখা ভালো। [খসড়া লেখা — চিকিৎসকের পর্যালোচনার অপেক্ষায়।]",
+          "লিভার ফাংশন টেস্ট কী, এবং কেন এর ফলাফল চিকিৎসকের সঙ্গে মিলিয়ে দেখা ভালো।",
         readTime: "৬ মিনিটে পড়ুন",
       },
+    ],
+  },
+
+  journey: {
+    eyebrow: "আপনার ভিজিট",
+    title: "আপনার ভিজিট যেভাবে হয়",
+    description: "পৌঁছানো থেকে বাড়ি ফেরা পর্যন্ত — চেম্বারে একটি পরামর্শের সহজ ও বন্ধুত্বপূর্ণ চিত্র।",
+    play: "অ্যানিমেশন চালান",
+    pause: "অ্যানিমেশন থামান",
+    goToStep: "ধাপ {n} দেখুন: {title}",
+    sceneLabel: "অ্যানিমেটেড চিত্র: একজন রোগী গাড়িতে চেম্বারে আসেন, রিসেপশনে নাম লেখান, ডাক্তারের সঙ্গে দেখা করেন এবং চিকিৎসা পরিকল্পনা নিয়ে নিশ্চিন্ত মনে ফিরে যান।",
+    clinicDoor: "চেম্বার",
+    doctorDoor: "ডাক্তার",
+    reception: "রিসেপশন",
+    steps: [
+      { title: "চেম্বারে পৌঁছানো", text: "নিশ্চিত করা সময়ে আসুন, সঙ্গে আগের রিপোর্ট ও প্রেসক্রিপশন আনুন।" },
+      { title: "সহজ রেজিস্ট্রেশন", text: "রিসেপশন আপনার তথ্য নিশ্চিত করে ডাক্তারের রুমে পৌঁছে দেবে।" },
+      { title: "সময় নিয়ে পরামর্শ", text: "ডাক্তার মন দিয়ে শোনেন, রিপোর্ট দেখেন এবং সবকিছু স্পষ্টভাবে বুঝিয়ে বলেন।" },
+      { title: "স্পষ্ট পরিকল্পনা নিয়ে ফেরা", text: "পরবর্তী করণীয় লিখিতভাবে বুঝে নিয়ে নিশ্চিন্ত মনে বাড়ি ফিরুন।" },
     ],
   },
 
@@ -609,16 +701,8 @@ const bn: Dict = {
         a: "আগের প্রেসক্রিপশন, এখন যেসব ওষুধ খাচ্ছেন তার তালিকা, এবং সাম্প্রতিক পরীক্ষার রিপোর্ট বা ইমেজিং (যেমন রক্ত পরীক্ষা বা আল্ট্রাসনোগ্রামের রিপোর্ট) সঙ্গে আনুন। সব কাগজ একটি ফাইলে গুছিয়ে রাখলে ভিজিট আরও ফলপ্রসূ হয়।",
       },
       {
-        q: "অন্য ডাক্তারের রেফারেন্স কি লাগবে?",
-        a: "[চেম্বার নিশ্চিত করবে: রোগীরা সরাসরি অ্যাপয়েন্টমেন্ট নিতে পারবেন, নাকি রেফারেন্স লাগবে।]",
-      },
-      {
-        q: "একটি পরামর্শে কত সময় লাগে?",
-        a: "[প্রথম ভিজিট ও ফলো-আপে সাধারণত কত সময় লাগে, তা চেম্বার নিশ্চিত করবে।]",
-      },
-      {
         q: "পরিবারের কেউ কি সঙ্গে আসতে পারবেন?",
-        a: "অনেক রোগী পরিবারের কাউকে বা সেবাদানকারীকে সঙ্গে আনতে সুবিধা পান — তিনি শুনতে ও নোট নিতে সাহায্য করতে পারেন। [চেম্বারের নিয়ম নিশ্চিত করুন।]",
+        a: "অনেক রোগী পরিবারের কাউকে বা সেবাদানকারীকে সঙ্গে আনতে সুবিধা পান — তিনি শুনতে ও নোট নিতে সাহায্য করতে পারেন।",
       },
       {
         q: "অনলাইন ফর্ম কি নিশ্চিত বুকিং?",
@@ -635,11 +719,11 @@ const bn: Dict = {
     eyebrow: "চেম্বারের তথ্য",
     title: "চেম্বারে আসুন",
     description: "শুধু অ্যাপয়েন্টমেন্টের মাধ্যমে পরামর্শ দেওয়া হয়। আগে ফোন করুন অথবা নিচে অ্যাপয়েন্টমেন্টের অনুরোধ পাঠান।",
-    name: "[হাসপাতাল / চেম্বারের নাম]",
-    addressLines: ["[ভবন / তলা, রাস্তার ঠিকানা]", "[এলাকা, শহর, পোস্টকোড]"],
+    name: "এক্স ডায়াগনস্টিক সেন্টার",
+    addressLines: ["বগুড়া, বাংলাদেশ"],
     hours: [
-      { days: "[শনিবার – বৃহস্পতিবার]", time: "[বিকেল ৫:০০ – রাত ৯:০০]" },
-      { days: "[শুক্রবার]", time: "[বন্ধ]" },
+      { days: "বৃহস্পতিবার ছাড়া প্রতিদিন", time: "বিকেল ৪:০০ – রাত ৯:০০" },
+      { days: "বৃহস্পতিবার", time: "বন্ধ" },
     ],
     visitingHours: "সাক্ষাতের সময়",
     appointments: "অ্যাপয়েন্টমেন্ট",
@@ -671,7 +755,7 @@ const bn: Dict = {
     date: "পছন্দের তারিখ",
     time: "পছন্দের সময়",
     selectTime: "সময় বেছে নিন",
-    timeSlots: ["সকাল (৯টা – ১২টা)", "দুপুর (১২টা – ৪টা)", "বিকেল–সন্ধ্যা (৪টা – ৮টা)"],
+    timeSlots: ["বিকেল ৪:০০ – ৫:৩০", "বিকেল ৫:৩০ – সন্ধ্যা ৭:০০", "সন্ধ্যা ৭:০০ – রাত ৯:০০"],
     submit: "অনুরোধ পাঠান",
     sending: "অনুরোধ পাঠানো হচ্ছে…",
     disclaimer:
@@ -684,6 +768,7 @@ const bn: Dict = {
       phoneInvalid: "সঠিক ফোন নম্বর লিখুন (৭–১৫ অঙ্ক)।",
       dateRequired: "পছন্দের তারিখ বেছে নিন।",
       datePast: "আজকের বা পরের কোনো তারিখ বেছে নিন।",
+      dateClosed: "বৃহস্পতিবার চেম্বার বন্ধ থাকে। অন্য একটি দিন বেছে নিন।",
       timeRequired: "পছন্দের সময় বেছে নিন।",
     },
     successTitle: "অনুরোধ পাওয়া গেছে",

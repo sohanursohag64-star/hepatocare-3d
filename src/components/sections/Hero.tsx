@@ -3,7 +3,9 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { ArrowRight, CalendarCheck, HeartPulse, ShieldCheck, Stethoscope } from "lucide-react";
+import Image from "next/image";
 import type { Dict } from "@/i18n/dictionaries";
+import { media } from "@/lib/site";
 import { Liver3D } from "../three/Liver3D";
 import { ButtonLink } from "../ui/Button";
 import { Magnetic } from "../ui/Magnetic";
@@ -97,9 +99,21 @@ export function Hero({ t }: { t: Dict }) {
             custom={3}
             className="mx-auto mt-8 flex max-w-md items-center gap-4 rounded-2xl border border-white bg-white/70 p-3 pr-5 text-left shadow-soft backdrop-blur lg:mx-0"
           >
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-navy-900 text-teal-300">
-              <Stethoscope className="h-6 w-6" aria-hidden />
-            </span>
+            {media.doctorAvatar ? (
+              <Image
+                src={media.doctorAvatar}
+                alt=""
+                width={56}
+                height={56}
+                sizes="56px"
+                priority
+                className="h-14 w-14 shrink-0 rounded-xl object-cover object-top ring-2 ring-white shadow-soft"
+              />
+            ) : (
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-navy-900 text-teal-300">
+                <Stethoscope className="h-6 w-6" aria-hidden />
+              </span>
+            )}
             <span className="min-w-0">
               <span className="block truncate font-display text-lg font-semibold text-navy-900">{doctor.name}</span>
               <span className="block text-sm font-medium text-teal-700">{doctor.designation}</span>
