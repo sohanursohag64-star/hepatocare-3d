@@ -10,6 +10,7 @@ import { Hero } from "./sections/Hero";
 import { LiverStory } from "./sections/LiverStory";
 import { PatientEducation } from "./sections/PatientEducation";
 import { PatientJourney } from "./sections/PatientJourney";
+import { ScopeProcedures } from "./sections/ScopeProcedures";
 import { Specialties } from "./sections/Specialties";
 import { WhyChooseUs } from "./sections/WhyChooseUs";
 import { WhatsAppButton } from "./WhatsAppButton";
@@ -49,6 +50,7 @@ export function HomePage({ t }: { t: Dict }) {
       <Navbar t={t} />
       <main id="main">
         <Hero t={t} />
+        <ScopeProcedures t={t.scope} />
         <LiverStory t={t.story} numberLocale={t.numberLocale} />
         <About t={t} />
         <Specialties t={t.specialties} />

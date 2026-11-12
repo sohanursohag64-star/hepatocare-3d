@@ -94,6 +94,39 @@ const en = {
     ],
   },
 
+  scope: {
+    eyebrow: "Endoscopy & Colonoscopy",
+    title: "A closer look, explained simply",
+    description:
+      "Endoscopy and colonoscopy use a thin, flexible tube with a tiny camera to look inside the digestive tract. Here is an illustrated overview of how each examination works.",
+    tabs: ["Endoscopy", "Colonoscopy"],
+    cameraView: "Camera view (illustration)",
+    play: "Play animation",
+    pause: "Pause animation",
+    sceneLabel:
+      "Animated illustration: a flexible scope with a camera travels through the esophagus, stomach and duodenum during endoscopy, and through the colon during colonoscopy.",
+    scenes: [
+      {
+        labels: ["Esophagus", "Stomach", "Duodenum"],
+        phases: [
+          { title: "A thin, flexible scope is passed through the mouth", text: "It travels gently down the food pipe (esophagus) into the stomach." },
+          { title: "The camera shows the lining on a screen", text: "The doctor can look at the esophagus, the stomach and the first part of the small intestine." },
+          { title: "The scope is gently withdrawn", text: "Afterwards, the doctor explains what was seen and what happens next." },
+        ],
+      },
+      {
+        labels: ["Rectum", "Colon", "Cecum"],
+        phases: [
+          { title: "A flexible scope is guided through the large intestine", text: "It moves slowly along the colon, from the rectum towards the cecum." },
+          { title: "The camera shows the lining of the colon", text: "The doctor examines the bowel wall on a screen." },
+          { title: "The scope is gently withdrawn", text: "The lining is viewed again on the way out, and the findings are explained afterwards." },
+        ],
+      },
+    ],
+    note: "Illustrative animation, not a medical image. Whether an examination is needed, and how to prepare for it, is decided together with your doctor.",
+    cta: "Ask about these examinations",
+  },
+
   story: {
     eyebrow: "The Liver Story",
     titleBefore: "Understanding the organ ",
@@ -452,6 +485,39 @@ const bn: Dict = {
       { id: "left-lobe", label: "বাম লোব", description: "ছোট লোবটি, যা পেটের উপরের অংশের বাম দিকে বিস্তৃত।" },
       { id: "gallbladder", label: "পিত্তথলি", description: "লিভারের নিচের ছোট একটি থলি, যেখানে পিত্তরস জমা থাকে।" },
     ],
+  },
+
+  scope: {
+    eyebrow: "এন্ডোস্কপি ও কোলনোস্কপি",
+    title: "ভেতরটা কাছ থেকে দেখা, সহজ ভাষায়",
+    description:
+      "এন্ডোস্কপি ও কোলনোস্কপিতে ছোট ক্যামেরাযুক্ত একটি সরু, নমনীয় নল দিয়ে পরিপাকতন্ত্রের ভেতরটা দেখা হয়। প্রতিটি পরীক্ষা কীভাবে হয়, তার একটি চিত্রিত ধারণা এখানে দেওয়া হলো।",
+    tabs: ["এন্ডোস্কপি", "কোলনোস্কপি"],
+    cameraView: "ক্যামেরার দৃশ্য (চিত্র)",
+    play: "অ্যানিমেশন চালান",
+    pause: "অ্যানিমেশন থামান",
+    sceneLabel:
+      "অ্যানিমেটেড চিত্র: ক্যামেরাযুক্ত নমনীয় নল এন্ডোস্কপিতে খাদ্যনালী, পাকস্থলী ও ডিওডেনামের ভেতর দিয়ে এবং কোলনোস্কপিতে বৃহদন্ত্রের ভেতর দিয়ে এগিয়ে যায়।",
+    scenes: [
+      {
+        labels: ["খাদ্যনালী", "পাকস্থলী", "ডিওডেনাম"],
+        phases: [
+          { title: "একটি সরু, নমনীয় নল মুখ দিয়ে প্রবেশ করানো হয়", text: "এটি ধীরে ধীরে খাদ্যনালী দিয়ে পাকস্থলীতে পৌঁছায়।" },
+          { title: "ক্যামেরা ভেতরের আবরণ পর্দায় দেখায়", text: "ডাক্তার খাদ্যনালী, পাকস্থলী ও ক্ষুদ্রান্ত্রের প্রথম অংশ দেখতে পারেন।" },
+          { title: "নলটি ধীরে ধীরে বের করে আনা হয়", text: "এরপর ডাক্তার কী দেখা গেল এবং পরবর্তী করণীয় বুঝিয়ে বলেন।" },
+        ],
+      },
+      {
+        labels: ["মলাশয়", "কোলন", "সিকাম"],
+        phases: [
+          { title: "একটি নমনীয় নল বৃহদন্ত্রের ভেতর দিয়ে এগিয়ে নেওয়া হয়", text: "এটি মলাশয় থেকে সিকামের দিকে কোলন বরাবর ধীরে ধীরে এগোয়।" },
+          { title: "ক্যামেরা কোলনের ভেতরের আবরণ দেখায়", text: "ডাক্তার পর্দায় অন্ত্রের দেয়াল পরীক্ষা করেন।" },
+          { title: "নলটি ধীরে ধীরে বের করে আনা হয়", text: "বের করার সময় আবরণ আবার দেখা হয়, এবং পরে ফলাফল বুঝিয়ে বলা হয়।" },
+        ],
+      },
+    ],
+    note: "এটি শিক্ষামূলক অ্যানিমেশন, চিকিৎসার ছবি নয়। পরীক্ষা প্রয়োজন কিনা এবং কীভাবে প্রস্তুতি নিতে হবে, তা আপনার ডাক্তারের সঙ্গে আলোচনা করে ঠিক করা হয়।",
+    cta: "এই পরীক্ষাগুলো সম্পর্কে জানুন",
   },
 
   story: {
